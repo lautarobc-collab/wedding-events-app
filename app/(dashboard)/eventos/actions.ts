@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { eventSchema, type EventFormValues } from "@/lib/validations/event";
+import { DEFAULT_CATEGORIES } from "@/lib/categories";
 
 export async function createEvent(values: EventFormValues) {
   const parsed = eventSchema.safeParse(values);
@@ -17,15 +18,32 @@ export async function createEvent(values: EventFormValues) {
 
   const { name, event_type, event_date, total_budget } = parsed.data;
 
-  const { error } = await supabase.from("events").insert({
-    owner_id: user.id,
-    name,
-    event_type,
-    event_date: event_date || null,
-    total_budget: total_budget ?? null,
-  });
+  const { data: newEvent, error } = await supabase
+    .from("events")
+    .insert({
+      owner_id: user.id,
+      name,
+      event_type,
+      event_date: event_date || null,
+      total_budget: total_budget ?? null,
+    })
+    .select("id")
+    .single();
 
   if (error) return { error: error.message };
+
+  const defaultCategories = DEFAULT_CATEGORIES[event_type].map((name, index) => ({
+    event_id: newEvent.id,
+    name,
+    estimated_amount: 0,
+    sort_order: index,
+  }));
+
+  const { error: categoriesError } = await supabase
+    .from("categories")
+    .insert(defaultCategories);
+
+  if (categoriesError) return { error: categoriesError.message };
 
   revalidatePath("/");
   return { success: true };

@@ -10,3 +10,19 @@ export type Event = {
   public_slug: string | null;
   created_at: string;
 };
+
+export type Category = {
+  id: string;
+  event_id: string;
+  name: string;
+  estimated_amount: number;
+  sort_order: number;
+};
+
+export type BudgetItem = {
+  id: string;
+  category_id: string;
+  description: string;
+  estimated: number;
+  actual: number;
+};
