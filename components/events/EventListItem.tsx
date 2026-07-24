@@ -1,13 +1,10 @@
 import Link from "next/link";
-import type { Event } from "@/lib/types";
+import { EVENT_TYPE_LABEL, type Event } from "@/lib/types";
 import { DeleteEventButton } from "./DeleteEventButton";
 
-const EVENT_TYPE_LABEL: Record<Event["event_type"], string> = {
-  boda: "Boda",
-  evento_generico: "Evento genérico",
-};
+type EventListItemData = Pick<Event, "id" | "name" | "event_type" | "event_date">;
 
-export function EventListItem({ event }: { event: Event }) {
+export function EventListItem({ event }: { event: EventListItemData }) {
   return (
     <li className="flex items-center justify-between rounded border border-neutral-200 px-4 py-3">
       <Link href={`/eventos/${event.id}`} className="flex flex-col">

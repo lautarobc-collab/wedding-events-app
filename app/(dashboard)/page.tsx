@@ -7,9 +7,9 @@ export default async function EventsPage() {
   const supabase = await createClient();
   const { data: events } = await supabase
     .from("events")
-    .select("*")
+    .select("id, name, event_type, event_date, created_at")
     .order("created_at", { ascending: false })
-    .returns<Event[]>();
+    .returns<Pick<Event, "id" | "name" | "event_type" | "event_date" | "created_at">[]>();
 
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-8 p-8">

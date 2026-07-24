@@ -7,7 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
 import { newCategorySchema, type NewCategoryFormValues } from "@/lib/validations/category";
 
-export function NewCategoryForm({ eventId }: { eventId: string }) {
+export function NewCategoryForm({
+  eventId,
+  nextSortOrder,
+}: {
+  eventId: string;
+  nextSortOrder: number;
+}) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const {
@@ -19,7 +25,7 @@ export function NewCategoryForm({ eventId }: { eventId: string }) {
 
   async function onSubmit(values: NewCategoryFormValues) {
     setServerError(null);
-    const result = await createCategory(eventId, values.name);
+    const result = await createCategory(eventId, values.name, nextSortOrder);
     if (result?.error) {
       setServerError(result.error);
       return;

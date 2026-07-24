@@ -1,5 +1,10 @@
 export type EventType = "boda" | "evento_generico";
 
+export const EVENT_TYPE_LABEL: Record<EventType, string> = {
+  boda: "Boda",
+  evento_generico: "Evento genérico",
+};
+
 export type Event = {
   id: string;
   owner_id: string;

@@ -5,6 +5,8 @@ import { CategoryCard } from "@/components/budget/CategoryCard";
 import { NewCategoryForm } from "@/components/budget/NewCategoryForm";
 import type { Category, BudgetItem } from "@/lib/types";
 
+type CategoryWithItems = Category & { budget_items: BudgetItem[] };
+
 export default async function BudgetPage({
   params,
 }: {
@@ -18,23 +20,13 @@ export default async function BudgetPage({
 
   const { data: categoriesData } = await supabase
     .from("categories")
-    .select("*")
+    .select("*, budget_items(*)")
     .eq("event_id", id)
     .order("sort_order", { ascending: true })
-    .returns<Category[]>();
+    .returns<CategoryWithItems[]>();
 
   const categories = categoriesData ?? [];
-  const categoryIds = categories.map((category) => category.id);
-
-  const { data: itemsData } = categoryIds.length
-    ? await supabase
-        .from("budget_items")
-        .select("*")
-        .in("category_id", categoryIds)
-        .returns<BudgetItem[]>()
-    : { data: [] as BudgetItem[] };
-
-  const items = itemsData ?? [];
+  const items = categories.flatMap((category) => category.budget_items);
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,12 +44,12 @@ export default async function BudgetPage({
             key={category.id}
             eventId={event.id}
             category={category}
-            items={items.filter((item) => item.category_id === category.id)}
+            items={category.budget_items}
           />
         ))}
       </div>
 
-      <NewCategoryForm eventId={event.id} />
+      <NewCategoryForm eventId={event.id} nextSortOrder={categories.length} />
     </div>
   );
 }

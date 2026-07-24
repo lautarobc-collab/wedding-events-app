@@ -2,28 +2,27 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { categorySchema, type CategoryFormValues } from "@/lib/validations/category";
+import {
+  categorySchema,
+  newCategorySchema,
+  type CategoryFormValues,
+} from "@/lib/validations/category";
 import {
   budgetItemSchema,
   type BudgetItemFormValues,
 } from "@/lib/validations/budgetItem";
 
-export async function createCategory(eventId: string, name: string) {
-  const parsed = categorySchema.pick({ name: true }).safeParse({ name });
+export async function createCategory(eventId: string, name: string, sortOrder: number) {
+  const parsed = newCategorySchema.safeParse({ name });
   if (!parsed.success) return { error: "Nombre inválido." };
 
   const supabase = await createClient();
-
-  const { count } = await supabase
-    .from("categories")
-    .select("id", { count: "exact", head: true })
-    .eq("event_id", eventId);
 
   const { error } = await supabase.from("categories").insert({
     event_id: eventId,
     name: parsed.data.name,
     estimated_amount: 0,
-    sort_order: count ?? 0,
+    sort_order: sortOrder,
   });
 
   if (error) return { error: error.message };

@@ -1,11 +1,7 @@
 import { getEvent } from "@/lib/events";
 import { EditEventForm } from "@/components/events/EditEventForm";
-import type { Event } from "@/lib/types";
-
-const EVENT_TYPE_LABEL: Record<Event["event_type"], string> = {
-  boda: "Boda",
-  evento_generico: "Evento genérico",
-};
+import { EVENT_TYPE_LABEL } from "@/lib/types";
+import { formatMoney } from "@/lib/format";
 
 export default async function EventSummaryPage({
   params,
@@ -33,7 +29,7 @@ export default async function EventSummaryPage({
         <div className="rounded border border-neutral-200 p-4">
           <dt className="text-sm text-neutral-500">Presupuesto</dt>
           <dd className="font-medium">
-            {event.total_budget != null ? event.total_budget : "Sin definir"}
+            {event.total_budget != null ? formatMoney(event.total_budget) : "Sin definir"}
           </dd>
         </div>
       </dl>
