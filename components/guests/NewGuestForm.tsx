@@ -1,0 +1,100 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
+import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
+
+export function NewGuestForm({ eventId }: { eventId: string }) {
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<GuestFormValues>({
+    resolver: zodResolver(guestSchema),
+    defaultValues: { plus_ones: 0 },
+  });
+
+  async function onSubmit(values: GuestFormValues) {
+    setServerError(null);
+    const result = await createGuest(eventId, values);
+    if (result?.error) {
+      setServerError(result.error);
+      return;
+    }
+    reset({
+      first_name: "",
+      last_name: "",
+      email: "",
+      invited_by: "",
+      plus_ones: 0,
+      dietary_restrictions: "",
+      table_number: undefined,
+    });
+    router.refresh();
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-3 rounded border border-neutral-200 p-4"
+    >
+      <h2 className="font-medium">Nuevo invitado</h2>
+      <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Nombre</label>
+          <input
+            {...register("first_name")}
+            className="rounded border border-neutral-300 px-2 py-1"
+          />
+          {errors.first_name && (
+            <p className="text-sm text-red-600">{errors.first_name.message}</p>
+          )}
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Apellidos</label>
+          <input
+            {...register("last_name")}
+            className="rounded border border-neutral-300 px-2 py-1"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Email</label>
+          <input
+            {...register("email")}
+            className="rounded border border-neutral-300 px-2 py-1"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Invitado por</label>
+          <input
+            {...register("invited_by")}
+            className="rounded border border-neutral-300 px-2 py-1"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Acompañantes</label>
+          <input
+            type="number"
+            min={0}
+            {...register("plus_ones", { valueAsNumber: true })}
+            className="w-24 rounded border border-neutral-300 px-2 py-1"
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="self-start rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+      >
+        {isSubmitting ? "Añadiendo..." : "Añadir invitado"}
+      </button>
+      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+    </form>
+  );
+}

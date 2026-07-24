@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { eventSchema, type EventFormValues } from "@/lib/validations/event";
 import { DEFAULT_CATEGORIES } from "@/lib/categories";
+import { generateSlug } from "@/lib/slug";
 
 export async function createEvent(values: EventFormValues) {
   const parsed = eventSchema.safeParse(values);
@@ -26,6 +27,7 @@ export async function createEvent(values: EventFormValues) {
       event_type,
       event_date: event_date || null,
       total_budget: total_budget ?? null,
+      public_slug: generateSlug(name),
     })
     .select("id")
     .single();
