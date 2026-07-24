@@ -36,7 +36,7 @@ tal cual al crear el repo.
    cercana (Europa).
 3. Cuando el proyecto esté listo, ve a **Project Settings → API** y copia:
    - `Project URL`
-   - `anon public key`
+   - `publishable key` (antes llamada "anon public key")
 4. Guárdalas — las pegarás en `.env.local` en el paso 4.
 
 Esto vale tanto si trabajas en local como en Claude Code web: es una base de
@@ -75,7 +75,7 @@ Next.js te pedirá crear `.env.local` con:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=tu-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=tu-publishable-key
 ```
 
 Ya hay un `.env.example` en esta carpeta con las claves vacías como
