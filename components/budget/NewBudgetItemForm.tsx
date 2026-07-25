@@ -60,7 +60,7 @@ export function NewBudgetItemForm({
         <label className="text-sm">Estimado</label>
         <input
           type="number"
-          step="0.01"
+          step="1"
           {...register("estimated", { valueAsNumber: true })}
           className="w-28 rounded border border-neutral-300 px-2 py-1"
         />
@@ -69,7 +69,7 @@ export function NewBudgetItemForm({
         <label className="text-sm">Real</label>
         <input
           type="number"
-          step="0.01"
+          step="1"
           {...register("actual", { valueAsNumber: true })}
           className="w-28 rounded border border-neutral-300 px-2 py-1"
         />

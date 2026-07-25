@@ -32,11 +32,7 @@ export default async function BudgetPage({
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">Presupuesto</h1>
 
-      <BudgetSummary
-        totalBudget={event.total_budget}
-        categories={categories}
-        items={items}
-      />
+      <BudgetSummary totalBudget={event.total_budget} items={items} />
 
       <div className="flex flex-col gap-4">
         {categories.map((category) => (

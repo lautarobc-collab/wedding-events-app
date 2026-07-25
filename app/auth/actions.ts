@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getOrigin } from "@/lib/url";
 
 export async function signIn(email: string, password: string) {
   const supabase = await createClient();
@@ -17,7 +18,12 @@ export async function signIn(email: string, password: string) {
 
 export async function signUp(email: string, password: string) {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const origin = await getOrigin();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${origin}/auth/callback` },
+  });
 
   if (error) return { error: error.message };
 

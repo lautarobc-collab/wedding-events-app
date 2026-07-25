@@ -1,16 +1,14 @@
-import type { Category, BudgetItem, Event } from "@/lib/types";
+import type { BudgetItem, Event } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
 
 export function BudgetSummary({
   totalBudget,
-  categories,
   items,
 }: {
   totalBudget: Event["total_budget"];
-  categories: Category[];
   items: BudgetItem[];
 }) {
-  const estimated = categories.reduce((sum, c) => sum + c.estimated_amount, 0);
+  const estimated = items.reduce((sum, i) => sum + i.estimated, 0);
   const spent = items.reduce((sum, i) => sum + i.actual, 0);
   const remaining = (totalBudget ?? estimated) - spent;
 
@@ -23,7 +21,7 @@ export function BudgetSummary({
         </dd>
       </div>
       <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Estimado por categorías</dt>
+        <dt className="text-sm text-neutral-500">Estimado (todos los gastos)</dt>
         <dd className="font-medium">{formatMoney(estimated)}</dd>
       </div>
       <div className="rounded border border-neutral-200 p-4">

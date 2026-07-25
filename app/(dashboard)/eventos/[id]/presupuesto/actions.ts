@@ -2,18 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import {
-  categorySchema,
-  newCategorySchema,
-  type CategoryFormValues,
-} from "@/lib/validations/category";
+import { categorySchema } from "@/lib/validations/category";
 import {
   budgetItemSchema,
   type BudgetItemFormValues,
 } from "@/lib/validations/budgetItem";
 
 export async function createCategory(eventId: string, name: string, sortOrder: number) {
-  const parsed = newCategorySchema.safeParse({ name });
+  const parsed = categorySchema.safeParse({ name });
   if (!parsed.success) return { error: "Nombre inválido." };
 
   const supabase = await createClient();
@@ -31,13 +27,9 @@ export async function createCategory(eventId: string, name: string, sortOrder: n
   return { success: true };
 }
 
-export async function updateCategory(
-  categoryId: string,
-  eventId: string,
-  values: CategoryFormValues,
-) {
-  const parsed = categorySchema.safeParse(values);
-  if (!parsed.success) return { error: "Datos inválidos." };
+export async function updateCategory(categoryId: string, eventId: string, name: string) {
+  const parsed = categorySchema.safeParse({ name });
+  if (!parsed.success) return { error: "Nombre inválido." };
 
   const supabase = await createClient();
   const { error } = await supabase

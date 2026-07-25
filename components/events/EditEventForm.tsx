@@ -101,7 +101,7 @@ export function EditEventForm({ event }: { event: Event }) {
         <input
           id="edit-total_budget"
           type="number"
-          step="0.01"
+          step="1"
           {...register("total_budget", {
             setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}

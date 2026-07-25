@@ -85,7 +85,7 @@ export function NewEventForm() {
         <input
           id="total_budget"
           type="number"
-          step="0.01"
+          step="1"
           {...register("total_budget", {
             setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}
