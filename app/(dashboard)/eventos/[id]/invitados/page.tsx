@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getEvent } from "@/lib/events";
-import { GuestSummary } from "@/components/guests/GuestSummary";
-import { GuestRow } from "@/components/guests/GuestRow";
-import { NewGuestForm } from "@/components/guests/NewGuestForm";
+import { GuestView } from "@/components/guests/GuestView";
 import type { Guest, RsvpResponse } from "@/lib/types";
 
 type GuestWithRsvp = Guest & { rsvp_responses: RsvpResponse[] };
@@ -29,24 +27,7 @@ export default async function GuestsPage({
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">Invitados</h1>
-
-      <GuestSummary guests={guests} />
-
-      <div className="flex flex-col gap-2">
-        {guests.map((guest) => (
-          <GuestRow
-            key={guest.id}
-            eventId={event.id}
-            slug={event.public_slug}
-            guest={guest}
-          />
-        ))}
-        {guests.length === 0 && (
-          <p className="text-sm text-neutral-500">Todavía no añadiste invitados.</p>
-        )}
-      </div>
-
-      <NewGuestForm eventId={event.id} />
+      <GuestView eventId={event.id} slug={event.public_slug} guests={guests} />
     </div>
   );
 }
