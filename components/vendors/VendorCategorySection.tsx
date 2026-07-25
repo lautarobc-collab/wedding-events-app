@@ -1,5 +1,5 @@
 import type { Category, Vendor } from "@/lib/types";
-import { VendorRow } from "./VendorRow";
+import { VendorCard } from "./VendorCard";
 import { NewVendorForm } from "./NewVendorForm";
 
 export function VendorCategorySection({
@@ -15,14 +15,15 @@ export function VendorCategorySection({
     <div className="rounded border border-neutral-200 p-4">
       <h2 className="mb-3 font-medium">{category.name}</h2>
 
-      <div className="flex flex-col gap-2">
-        {vendors.map((vendor) => (
-          <VendorRow key={vendor.id} eventId={eventId} vendor={vendor} />
-        ))}
-        {vendors.length === 0 && (
-          <p className="text-sm text-neutral-400">Sin proveedores todavía.</p>
-        )}
-      </div>
+      {vendors.length > 0 ? (
+        <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {vendors.map((vendor) => (
+            <VendorCard key={vendor.id} eventId={eventId} vendor={vendor} />
+          ))}
+        </div>
+      ) : (
+        <p className="mb-3 text-sm text-neutral-400">Sin proveedores todavía.</p>
+      )}
 
       <NewVendorForm eventId={eventId} categoryId={category.id} />
     </div>

@@ -63,7 +63,7 @@ export function NewVendorForm({
         <label className="text-sm">Precio</label>
         <input
           type="number"
-          step="0.01"
+          step="1"
           {...register("price", {
             setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}
