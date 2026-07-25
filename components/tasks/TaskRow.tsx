@@ -39,8 +39,15 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
     router.refresh();
   }
 
+  const today = new Date().toISOString().slice(0, 10);
+  const overdue = task.status !== "completado" && !!task.due_date && task.due_date < today;
+
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 rounded border border-neutral-200 px-4 py-3 text-sm">
+    <div
+      className={`flex flex-wrap items-center justify-between gap-2 rounded border px-4 py-3 text-sm ${
+        overdue ? "border-red-200 bg-red-50" : "border-neutral-200"
+      }`}
+    >
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -50,9 +57,10 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
         display={
           <div>
             <p className="font-medium">{task.title}</p>
-            <p className="text-neutral-500">
+            <p className={overdue ? "text-red-600" : "text-neutral-500"}>
               {TASK_STATUS_LABEL[task.status]}
               {task.due_date ? ` · Vence ${task.due_date}` : ""}
+              {overdue ? " · Vencida" : ""}
             </p>
           </div>
         }

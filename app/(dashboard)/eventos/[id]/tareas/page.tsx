@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getEvent } from "@/lib/events";
 import { TaskSummary } from "@/components/tasks/TaskSummary";
-import { TaskRow } from "@/components/tasks/TaskRow";
+import { TaskTimeline } from "@/components/tasks/TaskTimeline";
 import { NewTaskForm } from "@/components/tasks/NewTaskForm";
 import type { Task } from "@/lib/types";
 
@@ -30,14 +30,7 @@ export default async function TasksPage({
 
       <TaskSummary tasks={tasks} />
 
-      <div className="flex flex-col gap-2">
-        {tasks.map((task) => (
-          <TaskRow key={task.id} eventId={event.id} task={task} />
-        ))}
-        {tasks.length === 0 && (
-          <p className="text-sm text-neutral-500">Todavía no añadiste tareas.</p>
-        )}
-      </div>
+      <TaskTimeline eventId={event.id} tasks={tasks} />
 
       <NewTaskForm eventId={event.id} />
     </div>

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { eventSchema, type EventFormValues } from "@/lib/validations/event";
 import { DEFAULT_CATEGORIES } from "@/lib/categories";
+import { buildDefaultTasks } from "@/lib/defaultTasks";
 import { generateSlug } from "@/lib/slug";
 
 export async function createEvent(values: EventFormValues) {
@@ -46,6 +47,15 @@ export async function createEvent(values: EventFormValues) {
     .insert(defaultCategories);
 
   if (categoriesError) return { error: categoriesError.message };
+
+  const defaultTasks = buildDefaultTasks(event_type, event_date || null).map((task) => ({
+    ...task,
+    event_id: newEvent.id,
+  }));
+
+  const { error: tasksError } = await supabase.from("tasks").insert(defaultTasks);
+
+  if (tasksError) return { error: tasksError.message };
 
   revalidatePath("/");
   return { success: true };
