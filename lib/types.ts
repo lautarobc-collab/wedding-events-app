@@ -48,6 +48,7 @@ export type Guest = {
   email: string | null;
   invited_by: string | null;
   plus_ones: number;
+  children_count: number;
   dietary_restrictions: string | null;
   table_number: number | null;
   gift_description: string | null;
@@ -59,6 +60,7 @@ export type RsvpResponse = {
   guest_id: string;
   attending: AttendingStatus | null;
   confirmed_plus_ones: number | null;
+  confirmed_children: number | null;
   dietary_notes: string | null;
   message: string | null;
   responded_at: string;

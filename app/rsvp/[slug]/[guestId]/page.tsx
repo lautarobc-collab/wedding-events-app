@@ -11,8 +11,10 @@ type RsvpInvite = {
   first_name: string;
   last_name: string | null;
   invited_plus_ones: number;
+  invited_children: number;
   attending: AttendingStatus | null;
   confirmed_plus_ones: number | null;
+  confirmed_children: number | null;
   dietary_notes: string | null;
   message: string | null;
 };

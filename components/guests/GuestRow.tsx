@@ -38,6 +38,7 @@ export function GuestRow({
       email: guest.email ?? "",
       invited_by: guest.invited_by ?? "",
       plus_ones: guest.plus_ones,
+      children_count: guest.children_count,
       dietary_restrictions: guest.dietary_restrictions ?? "",
       table_number: guest.table_number ?? undefined,
     },
@@ -73,6 +74,7 @@ export function GuestRow({
             <p className="text-neutral-500">
               {status}
               {guest.plus_ones > 0 ? ` · +${guest.plus_ones} acompañantes invitados` : ""}
+              {guest.children_count > 0 ? ` (${guest.children_count} niños)` : ""}
               {guest.table_number != null ? ` · Mesa ${guest.table_number}` : ""}
             </p>
           </div>
@@ -105,6 +107,13 @@ export function GuestRow({
             min={0}
             placeholder="Acompañantes"
             {...register("plus_ones", { valueAsNumber: true })}
+            className="w-28 rounded border border-neutral-300 px-2 py-1"
+          />
+          <input
+            type="number"
+            min={0}
+            placeholder="De ellos, niños"
+            {...register("children_count", { valueAsNumber: true })}
             className="w-28 rounded border border-neutral-300 px-2 py-1"
           />
           <input
