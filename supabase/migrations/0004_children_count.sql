@@ -88,6 +88,11 @@ begin
     raise exception 'Invitado no encontrado';
   end if;
 
+  if p_confirmed_children is not null
+     and p_confirmed_children > coalesce(p_confirmed_plus_ones, 0) then
+    raise exception 'No puede haber más niños que acompañantes confirmados';
+  end if;
+
   insert into rsvp_responses (
     guest_id, attending, confirmed_plus_ones, confirmed_children, dietary_notes, message
   )

@@ -81,7 +81,6 @@ export function BudgetItemRow({
             {...register("actual", { valueAsNumber: true })}
             className="w-24 rounded border border-neutral-300 px-2 py-1"
           />
-          <p className="w-full text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
           {errors.description && (
             <p className="text-sm text-red-600">{errors.description.message}</p>
           )}

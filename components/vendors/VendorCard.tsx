@@ -128,7 +128,6 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
             {...register("notes")}
             className="rounded border border-neutral-300 px-2 py-1"
           />
-          <p className="text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
           {serverError && <p className="text-sm text-red-600">{serverError}</p>}
         </form>
       </InlineEditable>

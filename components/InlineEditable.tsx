@@ -53,6 +53,7 @@ export function InlineEditable({
   return (
     <div ref={containerRef} onBlur={handleBlur} onKeyDown={handleKeyDown} className={className}>
       {children}
+      <p className="text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
     </div>
   );
 }

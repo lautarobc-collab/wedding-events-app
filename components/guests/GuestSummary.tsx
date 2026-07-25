@@ -1,4 +1,4 @@
-import { guestAttendingStatus, latestRsvp } from "@/lib/rsvp";
+import { latestRsvp } from "@/lib/rsvp";
 import type { AttendingStatus, Guest, RsvpResponse } from "@/lib/types";
 
 export function GuestSummary({
@@ -16,10 +16,10 @@ export function GuestSummary({
   let confirmedPeople = 0;
 
   for (const guest of guests) {
-    const status = guestAttendingStatus(guest.rsvp_responses);
+    const latest = latestRsvp(guest.rsvp_responses);
+    const status = latest?.attending ?? "pendiente";
     counts[status] += 1;
     if (status === "si") {
-      const latest = latestRsvp(guest.rsvp_responses);
       confirmedPeople += 1 + (latest?.confirmed_plus_ones ?? 0);
     }
   }

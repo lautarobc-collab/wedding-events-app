@@ -22,13 +22,17 @@ export function GuestView({
 }) {
   const [selected, setSelected] = useState<FilterValue | null>(null);
 
+  const statusByGuestId = new Map(
+    guests.map((guest) => [guest.id, guestAttendingStatus(guest.rsvp_responses)]),
+  );
+
   const counts: Record<FilterValue, number> = { si: 0, no: 0, quizas: 0, pendiente: 0 };
-  for (const guest of guests) {
-    counts[guestAttendingStatus(guest.rsvp_responses)] += 1;
+  for (const status of statusByGuestId.values()) {
+    counts[status] += 1;
   }
 
   const visibleGuests = selected
-    ? guests.filter((guest) => guestAttendingStatus(guest.rsvp_responses) === selected)
+    ? guests.filter((guest) => statusByGuestId.get(guest.id) === selected)
     : guests;
 
   return (

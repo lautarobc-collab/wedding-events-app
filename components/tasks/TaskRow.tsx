@@ -90,7 +90,6 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
             {...register("notes")}
             className="rounded border border-neutral-300 px-2 py-1"
           />
-          <p className="w-full text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
           {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
           {serverError && <p className="text-sm text-red-600">{serverError}</p>}
         </form>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { COMMON_DIETARY_OPTIONS } from "@/lib/allergens";
 
 function parseValue(value: string) {
@@ -30,17 +30,15 @@ export function DietarySelect({
   onChange: (value: string) => void;
 }) {
   const parsed = useMemo(() => parseValue(value), [value]);
-  const [otherText, setOtherText] = useState(parsed.other);
 
   function toggleOption(option: string) {
     const known = parsed.known.includes(option)
       ? parsed.known.filter((item) => item !== option)
       : [...parsed.known, option];
-    onChange(buildValue(known, otherText));
+    onChange(buildValue(known, parsed.other));
   }
 
   function handleOtherChange(text: string) {
-    setOtherText(text);
     onChange(buildValue(parsed.known, text));
   }
 
@@ -71,7 +69,7 @@ export function DietarySelect({
       </div>
       <input
         placeholder="Otro (especifica)"
-        value={otherText}
+        value={parsed.other}
         onChange={(event) => handleOtherChange(event.target.value)}
         className="rounded border border-neutral-300 px-2 py-1 text-sm"
       />

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteGuest, updateGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
-import { latestRsvp } from "@/lib/rsvp";
+import { guestAttendingStatus } from "@/lib/rsvp";
 import { ATTENDING_LABEL, type Guest, type RsvpResponse } from "@/lib/types";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
 import { CopyRsvpLinkButton } from "./CopyRsvpLinkButton";
@@ -55,8 +55,9 @@ export function GuestRow({
     router.refresh();
   }
 
-  const latest = latestRsvp(guest.rsvp_responses);
-  const status = latest?.attending ? ATTENDING_LABEL[latest.attending] : "Sin responder";
+  const attendingStatus = guestAttendingStatus(guest.rsvp_responses);
+  const status =
+    attendingStatus === "pendiente" ? "Sin responder" : ATTENDING_LABEL[attendingStatus];
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded border border-neutral-200 px-4 py-3 text-sm">
@@ -132,7 +133,6 @@ export function GuestRow({
               <DietarySelect value={field.value ?? ""} onChange={field.onChange} />
             )}
           />
-          <p className="w-full text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
           {errors.first_name && (
             <p className="text-sm text-red-600">{errors.first_name.message}</p>
           )}

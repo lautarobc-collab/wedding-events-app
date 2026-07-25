@@ -65,7 +65,6 @@ export function CategoryCard({
                 {...register("name")}
                 className="rounded border border-neutral-300 px-2 py-1 font-medium"
               />
-              <p className="text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
               {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
               {serverError && <p className="text-sm text-red-600">{serverError}</p>}
             </form>
