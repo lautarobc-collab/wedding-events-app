@@ -2,22 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
+import { DietarySelect } from "@/components/DietarySelect";
 
 export function NewGuestForm({ eventId }: { eventId: string }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<GuestFormValues>({
     resolver: zodResolver(guestSchema),
-    defaultValues: { plus_ones: 0 },
+    defaultValues: { plus_ones: 0, dietary_restrictions: "" },
   });
 
   async function onSubmit(values: GuestFormValues) {
@@ -87,6 +89,18 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
           />
         </div>
       </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-sm">Restricciones alimentarias</label>
+        <Controller
+          name="dietary_restrictions"
+          control={control}
+          render={({ field }) => (
+            <DietarySelect value={field.value ?? ""} onChange={field.onChange} />
+          )}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={isSubmitting}

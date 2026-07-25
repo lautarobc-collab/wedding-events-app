@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { submitRsvp } from "@/app/rsvp/[slug]/[guestId]/actions";
 import { rsvpSchema, type RsvpFormValues } from "@/lib/validations/rsvp";
 import type { AttendingStatus } from "@/lib/types";
+import { DietarySelect } from "@/components/DietarySelect";
 
 type Invite = {
   invited_plus_ones: number;
@@ -28,6 +29,7 @@ export function RsvpForm({
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
@@ -102,9 +104,12 @@ export function RsvpForm({
           <label className="text-sm font-medium">
             Restricciones alimentarias (opcional)
           </label>
-          <input
-            {...register("dietary_notes")}
-            className="rounded border border-neutral-300 px-3 py-2"
+          <Controller
+            name="dietary_notes"
+            control={control}
+            render={({ field }) => (
+              <DietarySelect value={field.value ?? ""} onChange={field.onChange} />
+            )}
           />
         </div>
       )}

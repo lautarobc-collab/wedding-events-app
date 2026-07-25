@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteGuest, updateGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
 import { latestRsvp } from "@/lib/rsvp";
@@ -11,6 +11,7 @@ import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
 import { CopyRsvpLinkButton } from "./CopyRsvpLinkButton";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
+import { DietarySelect } from "@/components/DietarySelect";
 
 export function GuestRow({
   eventId,
@@ -26,6 +27,7 @@ export function GuestRow({
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<GuestFormValues>({
@@ -114,10 +116,12 @@ export function GuestRow({
             })}
             className="w-20 rounded border border-neutral-300 px-2 py-1"
           />
-          <input
-            placeholder="Restricciones alimentarias"
-            {...register("dietary_restrictions")}
-            className="rounded border border-neutral-300 px-2 py-1"
+          <Controller
+            name="dietary_restrictions"
+            control={control}
+            render={({ field }) => (
+              <DietarySelect value={field.value ?? ""} onChange={field.onChange} />
+            )}
           />
           <p className="w-full text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
           {errors.first_name && (
