@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { getEvent } from "@/lib/events";
 import { BudgetView } from "@/components/budget/BudgetView";
-import type { Category, BudgetItem } from "@/lib/types";
+import type { Category, BudgetItem, Vendor } from "@/lib/types";
 
-type CategoryWithItems = Category & { budget_items: BudgetItem[] };
+type CategoryWithChildren = Category & { budget_items: BudgetItem[]; vendors: Vendor[] };
 
 export default async function BudgetPage({
   params,
@@ -18,13 +18,17 @@ export default async function BudgetPage({
 
   const { data: categoriesData } = await supabase
     .from("categories")
-    .select("*, budget_items(*)")
+    .select("*, budget_items(*), vendors(*)")
     .eq("event_id", id)
     .order("sort_order", { ascending: true })
-    .returns<CategoryWithItems[]>();
+    .returns<CategoryWithChildren[]>();
 
-  const categories = categoriesData ?? [];
-  const items = categories.flatMap((category) => category.budget_items);
+  const categoriesRaw = categoriesData ?? [];
+  const categories: Category[] = categoriesRaw;
+  const items = categoriesRaw.flatMap((category) => category.budget_items);
+  const chosenVendors = categoriesRaw
+    .flatMap((category) => category.vendors)
+    .filter((vendor) => vendor.status === "elegido");
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,6 +38,7 @@ export default async function BudgetPage({
         totalBudget={event.total_budget}
         categories={categories}
         items={items}
+        chosenVendors={chosenVendors}
       />
     </div>
   );

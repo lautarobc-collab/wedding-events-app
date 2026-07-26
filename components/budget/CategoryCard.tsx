@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCategory, deleteCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
 import { categorySchema, type CategoryFormValues } from "@/lib/validations/category";
 import { formatMoney } from "@/lib/format";
-import type { Category, BudgetItem } from "@/lib/types";
+import type { BudgetItem, Category, Vendor } from "@/lib/types";
 import { BudgetItemRow } from "./BudgetItemRow";
 import { NewBudgetItemForm } from "./NewBudgetItemForm";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
@@ -17,10 +17,12 @@ export function CategoryCard({
   eventId,
   category,
   items,
+  chosenVendors,
 }: {
   eventId: string;
   category: Category;
   items: BudgetItem[];
+  chosenVendors: Vendor[];
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -34,8 +36,12 @@ export function CategoryCard({
     defaultValues: { name: category.name },
   });
 
-  const estimated = items.reduce((sum, i) => sum + i.estimated, 0);
-  const actual = items.reduce((sum, i) => sum + i.actual, 0);
+  const estimated =
+    items.reduce((sum, i) => sum + i.estimated, 0) +
+    chosenVendors.reduce((sum, v) => sum + (v.estimated ?? 0), 0);
+  const actual =
+    items.reduce((sum, i) => sum + i.actual, 0) +
+    chosenVendors.reduce((sum, v) => sum + (v.actual ?? 0), 0);
 
   async function onSubmit(values: CategoryFormValues) {
     setServerError(null);
@@ -84,10 +90,26 @@ export function CategoryCard({
       </div>
 
       <div className="flex flex-col gap-2">
+        {chosenVendors.map((vendor) => (
+          <div
+            key={vendor.id}
+            className="flex items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm"
+          >
+            <span>
+              {vendor.name}{" "}
+              <span className="text-xs text-neutral-400">(proveedor elegido)</span>
+            </span>
+            <span className="text-neutral-500">
+              {formatMoney(vendor.estimated ?? 0)} est. / {formatMoney(vendor.actual ?? 0)} real
+            </span>
+          </div>
+        ))}
+
         {items.map((item) => (
           <BudgetItemRow key={item.id} eventId={eventId} item={item} />
         ))}
-        {items.length === 0 && (
+
+        {items.length === 0 && chosenVendors.length === 0 && (
           <p className="text-sm text-neutral-400">Sin gastos todavía.</p>
         )}
       </div>

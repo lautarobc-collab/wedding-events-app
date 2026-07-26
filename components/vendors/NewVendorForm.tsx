@@ -38,7 +38,8 @@ export function NewVendorForm({
       contact_phone: "",
       contact_email: "",
       website: "",
-      price: undefined,
+      estimated: undefined,
+      actual: undefined,
       status: "candidato",
       notes: "",
     });
@@ -60,11 +61,11 @@ export function NewVendorForm({
         {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-sm">Precio</label>
+        <label className="text-sm">Estimado</label>
         <input
           type="number"
           step="1"
-          {...register("price", {
+          {...register("estimated", {
             setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}
           className="w-28 rounded border border-neutral-300 px-2 py-1"

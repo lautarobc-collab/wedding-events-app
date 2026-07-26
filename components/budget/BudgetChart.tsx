@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatMoney } from "@/lib/format";
-import type { BudgetItem, Category } from "@/lib/types";
+import type { BudgetItem, Category, Vendor } from "@/lib/types";
 
 type ChartDatum = {
   id: string;
@@ -22,22 +22,31 @@ type ChartDatum = {
 export function BudgetChart({
   categories,
   items,
+  chosenVendors,
   selectedCategoryId,
   onSelectCategory,
 }: {
   categories: Category[];
   items: BudgetItem[];
+  chosenVendors: Vendor[];
   selectedCategoryId: string | null;
   onSelectCategory: (id: string | null) => void;
 }) {
   const data: ChartDatum[] = categories
     .map((category) => {
       const categoryItems = items.filter((item) => item.category_id === category.id);
+      const categoryVendors = chosenVendors.filter(
+        (vendor) => vendor.category_id === category.id,
+      );
       return {
         id: category.id,
         name: category.name,
-        estimated: categoryItems.reduce((sum, item) => sum + item.estimated, 0),
-        actual: categoryItems.reduce((sum, item) => sum + item.actual, 0),
+        estimated:
+          categoryItems.reduce((sum, item) => sum + item.estimated, 0) +
+          categoryVendors.reduce((sum, vendor) => sum + (vendor.estimated ?? 0), 0),
+        actual:
+          categoryItems.reduce((sum, item) => sum + item.actual, 0) +
+          categoryVendors.reduce((sum, vendor) => sum + (vendor.actual ?? 0), 0),
       };
     })
     .filter((datum) => datum.estimated > 0 || datum.actual > 0);

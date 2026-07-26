@@ -12,7 +12,8 @@ export async function createVendor(
   const parsed = vendorSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { name, contact_phone, contact_email, website, price, status, notes } = parsed.data;
+  const { name, contact_phone, contact_email, website, estimated, actual, status, notes } =
+    parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase.from("vendors").insert({
@@ -21,7 +22,8 @@ export async function createVendor(
     contact_phone: contact_phone || null,
     contact_email: contact_email || null,
     website: website || null,
-    price: price ?? null,
+    estimated: estimated ?? null,
+    actual: actual ?? null,
     status,
     notes: notes || null,
   });
@@ -29,6 +31,7 @@ export async function createVendor(
   if (error) return { error: error.message };
 
   revalidatePath(`/eventos/${eventId}/proveedores`);
+  revalidatePath(`/eventos/${eventId}/presupuesto`);
   return { success: true };
 }
 
@@ -40,7 +43,8 @@ export async function updateVendor(
   const parsed = vendorSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { name, contact_phone, contact_email, website, price, status, notes } = parsed.data;
+  const { name, contact_phone, contact_email, website, estimated, actual, status, notes } =
+    parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -50,7 +54,8 @@ export async function updateVendor(
       contact_phone: contact_phone || null,
       contact_email: contact_email || null,
       website: website || null,
-      price: price ?? null,
+      estimated: estimated ?? null,
+      actual: actual ?? null,
       status,
       notes: notes || null,
     })
@@ -59,6 +64,7 @@ export async function updateVendor(
   if (error) return { error: error.message };
 
   revalidatePath(`/eventos/${eventId}/proveedores`);
+  revalidatePath(`/eventos/${eventId}/presupuesto`);
   return { success: true };
 }
 
@@ -67,4 +73,5 @@ export async function deleteVendor(vendorId: string, eventId: string) {
   const { error } = await supabase.from("vendors").delete().eq("id", vendorId);
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/proveedores`);
+  revalidatePath(`/eventos/${eventId}/presupuesto`);
 }

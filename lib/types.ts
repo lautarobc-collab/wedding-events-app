@@ -99,7 +99,8 @@ export type Vendor = {
   contact_phone: string | null;
   contact_email: string | null;
   website: string | null;
-  price: number | null;
+  estimated: number | null;
+  actual: number | null;
   status: VendorStatus;
   notes: string | null;
 };

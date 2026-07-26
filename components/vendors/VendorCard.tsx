@@ -33,7 +33,8 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
       contact_phone: vendor.contact_phone ?? "",
       contact_email: vendor.contact_email ?? "",
       website: vendor.website ?? "",
-      price: vendor.price ?? undefined,
+      estimated: vendor.estimated ?? undefined,
+      actual: vendor.actual ?? undefined,
       status: vendor.status,
       notes: vendor.notes ?? "",
     },
@@ -68,8 +69,18 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
               </span>
             </div>
 
-            {vendor.price != null && (
-              <p className="text-sm text-neutral-600">{formatMoney(vendor.price)}</p>
+            {(vendor.estimated != null || vendor.actual != null) && (
+              <p className="text-sm text-neutral-600">
+                {vendor.estimated != null ? `${formatMoney(vendor.estimated)} est.` : ""}
+                {vendor.estimated != null && vendor.actual != null ? " / " : ""}
+                {vendor.actual != null ? `${formatMoney(vendor.actual)} real` : ""}
+              </p>
+            )}
+
+            {vendor.status === "elegido" && (
+              <p className="text-xs text-neutral-400">
+                Cuenta como gasto de esta categoría en Presupuesto.
+              </p>
             )}
 
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
@@ -105,15 +116,26 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
             {...register("website")}
             className="rounded border border-neutral-300 px-2 py-1"
           />
-          <input
-            type="number"
-            step="1"
-            placeholder="Precio"
-            {...register("price", {
-              setValueAs: (v) => (v === "" ? undefined : Number(v)),
-            })}
-            className="rounded border border-neutral-300 px-2 py-1"
-          />
+          <div className="flex gap-2">
+            <input
+              type="number"
+              step="1"
+              placeholder="Estimado"
+              {...register("estimated", {
+                setValueAs: (v) => (v === "" ? undefined : Number(v)),
+              })}
+              className="w-1/2 rounded border border-neutral-300 px-2 py-1"
+            />
+            <input
+              type="number"
+              step="1"
+              placeholder="Real"
+              {...register("actual", {
+                setValueAs: (v) => (v === "" ? undefined : Number(v)),
+              })}
+              className="w-1/2 rounded border border-neutral-300 px-2 py-1"
+            />
+          </div>
           <select
             {...register("status")}
             className="rounded border border-neutral-300 px-2 py-1"

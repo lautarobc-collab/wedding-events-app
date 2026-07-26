@@ -5,18 +5,20 @@ import { BudgetSummary } from "./BudgetSummary";
 import { BudgetChart } from "./BudgetChart";
 import { CategoryCard } from "./CategoryCard";
 import { NewCategoryForm } from "./NewCategoryForm";
-import type { BudgetItem, Category, Event } from "@/lib/types";
+import type { BudgetItem, Category, Event, Vendor } from "@/lib/types";
 
 export function BudgetView({
   eventId,
   totalBudget,
   categories,
   items,
+  chosenVendors,
 }: {
   eventId: string;
   totalBudget: Event["total_budget"];
   categories: Category[];
   items: BudgetItem[];
+  chosenVendors: Vendor[];
 }) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
@@ -26,11 +28,12 @@ export function BudgetView({
 
   return (
     <>
-      <BudgetSummary totalBudget={totalBudget} items={items} />
+      <BudgetSummary totalBudget={totalBudget} items={items} chosenVendors={chosenVendors} />
 
       <BudgetChart
         categories={categories}
         items={items}
+        chosenVendors={chosenVendors}
         selectedCategoryId={selectedCategoryId}
         onSelectCategory={setSelectedCategoryId}
       />
@@ -42,6 +45,9 @@ export function BudgetView({
             eventId={eventId}
             category={category}
             items={items.filter((item) => item.category_id === category.id)}
+            chosenVendors={chosenVendors.filter(
+              (vendor) => vendor.category_id === category.id,
+            )}
           />
         ))}
       </div>

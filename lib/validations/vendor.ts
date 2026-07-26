@@ -5,7 +5,11 @@ export const vendorSchema = z.object({
   contact_phone: z.string().trim().max(40).optional(),
   contact_email: z.string().trim().max(160).optional(),
   website: z.string().trim().max(200).optional(),
-  price: z
+  estimated: z
+    .number({ error: "Tiene que ser un número" })
+    .nonnegative("No puede ser negativo")
+    .optional(),
+  actual: z
     .number({ error: "Tiene que ser un número" })
     .nonnegative("No puede ser negativo")
     .optional(),
