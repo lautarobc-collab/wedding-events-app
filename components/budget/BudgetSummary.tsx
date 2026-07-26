@@ -1,5 +1,6 @@
 import type { BudgetItem, Event, Vendor } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
+import { sumBudget } from "@/lib/budget";
 
 export function BudgetSummary({
   totalBudget,
@@ -10,12 +11,7 @@ export function BudgetSummary({
   items: BudgetItem[];
   chosenVendors: Vendor[];
 }) {
-  const estimated =
-    items.reduce((sum, i) => sum + i.estimated, 0) +
-    chosenVendors.reduce((sum, v) => sum + (v.estimated ?? 0), 0);
-  const spent =
-    items.reduce((sum, i) => sum + i.actual, 0) +
-    chosenVendors.reduce((sum, v) => sum + (v.actual ?? 0), 0);
+  const { estimated, actual: spent } = sumBudget(items, chosenVendors);
   const remaining = (totalBudget ?? estimated) - spent;
 
   return (

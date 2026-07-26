@@ -10,6 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatMoney } from "@/lib/format";
+import { sumBudget } from "@/lib/budget";
 import type { BudgetItem, Category, Vendor } from "@/lib/types";
 
 type ChartDatum = {
@@ -38,16 +39,8 @@ export function BudgetChart({
       const categoryVendors = chosenVendors.filter(
         (vendor) => vendor.category_id === category.id,
       );
-      return {
-        id: category.id,
-        name: category.name,
-        estimated:
-          categoryItems.reduce((sum, item) => sum + item.estimated, 0) +
-          categoryVendors.reduce((sum, vendor) => sum + (vendor.estimated ?? 0), 0),
-        actual:
-          categoryItems.reduce((sum, item) => sum + item.actual, 0) +
-          categoryVendors.reduce((sum, vendor) => sum + (vendor.actual ?? 0), 0),
-      };
+      const { estimated, actual } = sumBudget(categoryItems, categoryVendors);
+      return { id: category.id, name: category.name, estimated, actual };
     })
     .filter((datum) => datum.estimated > 0 || datum.actual > 0);
 

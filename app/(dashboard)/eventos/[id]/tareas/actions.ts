@@ -22,6 +22,7 @@ export async function createTask(eventId: string, values: TaskFormValues) {
   if (error) return { error: error.message };
 
   revalidatePath(`/eventos/${eventId}/tareas`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -49,6 +50,7 @@ export async function updateTask(
   if (error) return { error: error.message };
 
   revalidatePath(`/eventos/${eventId}/tareas`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -57,4 +59,5 @@ export async function deleteTask(taskId: string, eventId: string) {
   const { error } = await supabase.from("tasks").delete().eq("id", taskId);
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/tareas`);
+  revalidatePath(`/eventos/${eventId}`);
 }

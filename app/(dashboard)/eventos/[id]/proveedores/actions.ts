@@ -32,6 +32,7 @@ export async function createVendor(
 
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}/presupuesto`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -65,6 +66,7 @@ export async function updateVendor(
 
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}/presupuesto`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -74,4 +76,5 @@ export async function deleteVendor(vendorId: string, eventId: string) {
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}/presupuesto`);
+  revalidatePath(`/eventos/${eventId}`);
 }
