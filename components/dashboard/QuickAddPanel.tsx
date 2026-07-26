@@ -78,6 +78,9 @@ export function QuickAddPanel({
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
   const [phone, setPhone] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [invitedBy, setInvitedBy] = useState("");
   const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
@@ -105,6 +108,9 @@ export function QuickAddPanel({
       case "invitado":
         result = await createGuest(eventId, {
           first_name: text,
+          last_name: lastName || undefined,
+          email: email || undefined,
+          invited_by: invitedBy || undefined,
           dietary_restrictions: "",
           companions: [],
         });
@@ -136,6 +142,9 @@ export function QuickAddPanel({
     setText("");
     setAmount("");
     setPhone("");
+    setLastName("");
+    setEmail("");
+    setInvitedBy("");
     router.refresh();
   }
 
@@ -223,6 +232,38 @@ export function QuickAddPanel({
               className="rounded border border-neutral-300 px-2 py-1"
             />
           </div>
+          {tab === "invitado" && (
+            <>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm">Apellidos</label>
+                <input
+                  placeholder="Opcional"
+                  value={lastName}
+                  onChange={(event) => setLastName(event.target.value)}
+                  className="rounded border border-neutral-300 px-2 py-1"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm">Email</label>
+                <input
+                  type="email"
+                  placeholder="Opcional"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="rounded border border-neutral-300 px-2 py-1"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm">Invitado por</label>
+                <input
+                  placeholder="Opcional"
+                  value={invitedBy}
+                  onChange={(event) => setInvitedBy(event.target.value)}
+                  className="rounded border border-neutral-300 px-2 py-1"
+                />
+              </div>
+            </>
+          )}
           {tab === "gasto" && (
             <div className="flex flex-col gap-1">
               <label className="text-sm">Importe estimado (€)</label>
