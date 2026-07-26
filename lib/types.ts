@@ -47,12 +47,18 @@ export type Guest = {
   last_name: string | null;
   email: string | null;
   invited_by: string | null;
-  plus_ones: number;
-  children_count: number;
   dietary_restrictions: string | null;
   table_number: number | null;
   gift_description: string | null;
   thank_you_sent: boolean;
+};
+
+export type GuestCompanion = {
+  id: string;
+  guest_id: string;
+  name: string | null;
+  is_child: boolean;
+  dietary_restrictions: string | null;
 };
 
 export type RsvpResponse = {

@@ -54,9 +54,8 @@ export function QuickAddPanel({
       case "invitado":
         result = await createGuest(eventId, {
           first_name: text,
-          plus_ones: 0,
-          children_count: 0,
           dietary_restrictions: "",
+          companions: [],
         });
         break;
       case "gasto":

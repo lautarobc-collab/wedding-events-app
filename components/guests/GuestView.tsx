@@ -6,10 +6,13 @@ import { GuestChart } from "./GuestChart";
 import { GuestRow } from "./GuestRow";
 import { NewGuestForm } from "./NewGuestForm";
 import { guestAttendingStatus } from "@/lib/rsvp";
-import type { AttendingStatus, Guest, RsvpResponse } from "@/lib/types";
+import type { AttendingStatus, Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 
 type FilterValue = AttendingStatus | "pendiente";
-type GuestWithRsvp = Guest & { rsvp_responses: RsvpResponse[] };
+type GuestWithChildren = Guest & {
+  rsvp_responses: RsvpResponse[];
+  guest_companions: GuestCompanion[];
+};
 
 export function GuestView({
   eventId,
@@ -18,7 +21,7 @@ export function GuestView({
 }: {
   eventId: string;
   slug: string | null;
-  guests: GuestWithRsvp[];
+  guests: GuestWithChildren[];
 }) {
   const [selected, setSelected] = useState<FilterValue | null>(null);
 

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
 import { DietarySelect } from "@/components/DietarySelect";
+import { CompanionsField } from "./CompanionsField";
 
 export function NewGuestForm({ eventId }: { eventId: string }) {
   const router = useRouter();
@@ -19,7 +20,7 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
     formState: { errors, isSubmitting },
   } = useForm<GuestFormValues>({
     resolver: zodResolver(guestSchema),
-    defaultValues: { plus_ones: 0, children_count: 0, dietary_restrictions: "" },
+    defaultValues: { dietary_restrictions: "", companions: [] },
   });
 
   async function onSubmit(values: GuestFormValues) {
@@ -34,9 +35,9 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
       last_name: "",
       email: "",
       invited_by: "",
-      plus_ones: 0,
       dietary_restrictions: "",
       table_number: undefined,
+      companions: [],
     });
     router.refresh();
   }
@@ -79,31 +80,10 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
             className="rounded border border-neutral-300 px-2 py-1"
           />
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm">Acompañantes</label>
-          <input
-            type="number"
-            min={0}
-            {...register("plus_ones", { valueAsNumber: true })}
-            className="w-24 rounded border border-neutral-300 px-2 py-1"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm">De ellos, niños</label>
-          <input
-            type="number"
-            min={0}
-            {...register("children_count", { valueAsNumber: true })}
-            className="w-24 rounded border border-neutral-300 px-2 py-1"
-          />
-          {errors.children_count && (
-            <p className="text-sm text-red-600">{errors.children_count.message}</p>
-          )}
-        </div>
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm">Restricciones alimentarias</label>
+        <label className="text-sm">Restricciones alimentarias (invitado principal)</label>
         <Controller
           name="dietary_restrictions"
           control={control}
@@ -112,6 +92,8 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
           )}
         />
       </div>
+
+      <CompanionsField control={control} />
 
       <button
         type="submit"

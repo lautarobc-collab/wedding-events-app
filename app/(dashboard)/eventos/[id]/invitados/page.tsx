@@ -1,9 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { getEvent } from "@/lib/events";
 import { GuestView } from "@/components/guests/GuestView";
-import type { Guest, RsvpResponse } from "@/lib/types";
+import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 
-type GuestWithRsvp = Guest & { rsvp_responses: RsvpResponse[] };
+type GuestWithChildren = Guest & {
+  rsvp_responses: RsvpResponse[];
+  guest_companions: GuestCompanion[];
+};
 
 export default async function GuestsPage({
   params,
@@ -17,10 +20,10 @@ export default async function GuestsPage({
   const supabase = await createClient();
   const { data: guestsData } = await supabase
     .from("guests")
-    .select("*, rsvp_responses(*)")
+    .select("*, rsvp_responses(*), guest_companions(*)")
     .eq("event_id", id)
     .order("first_name", { ascending: true })
-    .returns<GuestWithRsvp[]>();
+    .returns<GuestWithChildren[]>();
 
   const guests = guestsData ?? [];
 
