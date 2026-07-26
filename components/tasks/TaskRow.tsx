@@ -1,19 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteTask, updateTask } from "@/app/(dashboard)/eventos/[id]/tareas/actions";
-import { TASK_STATUS_LABEL, type Task } from "@/lib/types";
+import { TASK_STATUS_LABEL, type BudgetItem, type Category, type Guest, type Task, type Vendor } from "@/lib/types";
 import { taskSchema, type TaskFormValues } from "@/lib/validations/task";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
+import { TaskLinkPicker } from "@/components/tasks/TaskLinkPicker";
+import { describeTaskLink, resolveTaskLink, taskLinkToKindAndRef, type TaskLinkKind } from "@/lib/taskLinks";
 
-export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
+export function TaskRow({
+  eventId,
+  task,
+  guests,
+  budgetItems,
+  vendors,
+  categories,
+}: {
+  eventId: string;
+  task: Task;
+  guests: Guest[];
+  budgetItems: BudgetItem[];
+  vendors: Vendor[];
+  categories: Category[];
+}) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const initialLink = taskLinkToKindAndRef(task);
+  const [linkKind, setLinkKind] = useState<"" | TaskLinkKind>(initialLink.kind);
+  const [linkRefId, setLinkRefId] = useState(initialLink.refId);
   const {
     register,
     handleSubmit,
@@ -30,7 +50,7 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
 
   async function onSubmit(values: TaskFormValues) {
     setServerError(null);
-    const result = await updateTask(task.id, eventId, values);
+    const result = await updateTask(task.id, eventId, values, resolveTaskLink(linkKind, linkRefId));
     if (result?.error) {
       setServerError(result.error);
       return;
@@ -41,6 +61,7 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
 
   const today = new Date().toISOString().slice(0, 10);
   const overdue = task.status !== "completado" && !!task.due_date && task.due_date < today;
+  const link = describeTaskLink(task, eventId, { guests, budgetItems, vendors, categories });
 
   return (
     <div
@@ -50,7 +71,11 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
     >
       <InlineEditable
         editing={editing}
-        onStartEdit={() => setEditing(true)}
+        onStartEdit={() => {
+          setLinkKind(initialLink.kind);
+          setLinkRefId(initialLink.refId);
+          setEditing(true);
+        }}
         onCancel={() => setEditing(false)}
         onCommit={handleSubmit(onSubmit)}
         className="flex-1"
@@ -62,33 +87,54 @@ export function TaskRow({ eventId, task }: { eventId: string; task: Task }) {
               {task.due_date ? ` · Vence ${task.due_date}` : ""}
               {overdue ? " · Vencida" : ""}
             </p>
+            {link && (
+              <Link
+                href={link.href}
+                onClick={(event) => event.stopPropagation()}
+                className="mt-1 inline-block rounded-full border border-neutral-300 px-2 py-0.5 text-xs text-neutral-600 hover:border-neutral-400"
+              >
+                {link.label}
+              </Link>
+            )}
           </div>
         }
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap gap-2">
-          <input
-            autoFocus
-            placeholder="Título"
-            {...register("title")}
-            className="rounded border border-neutral-300 px-2 py-1"
-          />
-          <input
-            type="date"
-            {...register("due_date")}
-            className="rounded border border-neutral-300 px-2 py-1"
-          />
-          <select
-            {...register("status")}
-            className="rounded border border-neutral-300 px-2 py-1"
-          >
-            <option value="sin_empezar">Sin empezar</option>
-            <option value="en_curso">En curso</option>
-            <option value="completado">Completado</option>
-          </select>
-          <input
-            placeholder="Notas"
-            {...register("notes")}
-            className="rounded border border-neutral-300 px-2 py-1"
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+          <div className="flex flex-wrap gap-2">
+            <input
+              autoFocus
+              placeholder="Título"
+              {...register("title")}
+              className="rounded border border-neutral-300 px-2 py-1"
+            />
+            <input
+              type="date"
+              {...register("due_date")}
+              className="rounded border border-neutral-300 px-2 py-1"
+            />
+            <select
+              {...register("status")}
+              className="rounded border border-neutral-300 px-2 py-1"
+            >
+              <option value="sin_empezar">Sin empezar</option>
+              <option value="en_curso">En curso</option>
+              <option value="completado">Completado</option>
+            </select>
+            <input
+              placeholder="Notas"
+              {...register("notes")}
+              className="rounded border border-neutral-300 px-2 py-1"
+            />
+          </div>
+          <TaskLinkPicker
+            kind={linkKind}
+            onKindChange={setLinkKind}
+            refId={linkRefId}
+            onRefIdChange={setLinkRefId}
+            guests={guests}
+            budgetItems={budgetItems}
+            vendors={vendors}
+            categories={categories}
           />
           {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
           {serverError && <p className="text-sm text-red-600">{serverError}</p>}

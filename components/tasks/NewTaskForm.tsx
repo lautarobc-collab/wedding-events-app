@@ -6,10 +6,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTask } from "@/app/(dashboard)/eventos/[id]/tareas/actions";
 import { taskSchema, type TaskFormValues } from "@/lib/validations/task";
+import { resolveTaskLink, type TaskLinkKind } from "@/lib/taskLinks";
+import { TaskLinkPicker } from "@/components/tasks/TaskLinkPicker";
+import type { BudgetItem, Category, Guest, Vendor } from "@/lib/types";
 
-export function NewTaskForm({ eventId }: { eventId: string }) {
+export function NewTaskForm({
+  eventId,
+  guests,
+  budgetItems,
+  vendors,
+  categories,
+}: {
+  eventId: string;
+  guests: Guest[];
+  budgetItems: BudgetItem[];
+  vendors: Vendor[];
+  categories: Category[];
+}) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [linkKind, setLinkKind] = useState<"" | TaskLinkKind>("");
+  const [linkRefId, setLinkRefId] = useState("");
   const {
     register,
     handleSubmit,
@@ -22,12 +39,14 @@ export function NewTaskForm({ eventId }: { eventId: string }) {
 
   async function onSubmit(values: TaskFormValues) {
     setServerError(null);
-    const result = await createTask(eventId, values);
+    const result = await createTask(eventId, values, resolveTaskLink(linkKind, linkRefId));
     if (result?.error) {
       setServerError(result.error);
       return;
     }
     reset({ title: "", due_date: "", status: "sin_empezar", notes: "" });
+    setLinkKind("");
+    setLinkRefId("");
     router.refresh();
   }
 
@@ -66,6 +85,18 @@ export function NewTaskForm({ eventId }: { eventId: string }) {
           </select>
         </div>
       </div>
+
+      <TaskLinkPicker
+        kind={linkKind}
+        onKindChange={setLinkKind}
+        refId={linkRefId}
+        onRefIdChange={setLinkRefId}
+        guests={guests}
+        budgetItems={budgetItems}
+        vendors={vendors}
+        categories={categories}
+      />
+
       <button
         type="submit"
         disabled={isSubmitting}
