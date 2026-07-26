@@ -24,6 +24,36 @@ export default async function EventSummaryPage({
     .order("sort_order", { ascending: true })
     .returns<Category[]>();
 
+  const categoryIds = (categoriesData ?? []).map((category) => category.id);
+
+  const [{ data: guestsData }, { data: tasksData }, { data: budgetItemsData }, { data: vendorsData }] =
+    await Promise.all([
+      supabase
+        .from("guests")
+        .select("id, first_name, last_name")
+        .eq("event_id", id)
+        .order("first_name", { ascending: true }),
+      supabase
+        .from("tasks")
+        .select("id, title")
+        .eq("event_id", id)
+        .order("title", { ascending: true }),
+      categoryIds.length > 0
+        ? supabase
+            .from("budget_items")
+            .select("id, category_id, description")
+            .in("category_id", categoryIds)
+            .order("description", { ascending: true })
+        : Promise.resolve({ data: [] }),
+      categoryIds.length > 0
+        ? supabase
+            .from("vendors")
+            .select("id, category_id, name")
+            .in("category_id", categoryIds)
+            .order("name", { ascending: true })
+        : Promise.resolve({ data: [] }),
+    ]);
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">Resumen</h1>
@@ -47,7 +77,14 @@ export default async function EventSummaryPage({
 
       <EditEventForm event={event} />
 
-      <QuickAddPanel eventId={event.id} categories={categoriesData ?? []} />
+      <QuickAddPanel
+        eventId={event.id}
+        categories={categoriesData ?? []}
+        guests={guestsData ?? []}
+        tasks={tasksData ?? []}
+        budgetItems={budgetItemsData ?? []}
+        vendors={vendorsData ?? []}
+      />
     </div>
   );
 }
