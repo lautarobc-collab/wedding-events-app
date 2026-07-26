@@ -5,10 +5,9 @@ import { GuestSummary } from "./GuestSummary";
 import { GuestChart } from "./GuestChart";
 import { GuestRow } from "./GuestRow";
 import { NewGuestForm } from "./NewGuestForm";
-import { guestAttendingStatus } from "@/lib/rsvp";
-import type { AttendingStatus, Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
+import { guestStatus, type GuestStatus } from "@/lib/rsvp";
+import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 
-type FilterValue = AttendingStatus | "pendiente";
 type GuestWithChildren = Guest & {
   rsvp_responses: RsvpResponse[];
   guest_companions: GuestCompanion[];
@@ -23,13 +22,19 @@ export function GuestView({
   slug: string | null;
   guests: GuestWithChildren[];
 }) {
-  const [selected, setSelected] = useState<FilterValue | null>(null);
+  const [selected, setSelected] = useState<GuestStatus | null>(null);
 
   const statusByGuestId = new Map(
-    guests.map((guest) => [guest.id, guestAttendingStatus(guest.rsvp_responses)]),
+    guests.map((guest) => [guest.id, guestStatus(guest.invitation_status, guest.rsvp_responses)]),
   );
 
-  const counts: Record<FilterValue, number> = { si: 0, no: 0, quizas: 0, pendiente: 0 };
+  const counts: Record<GuestStatus, number> = {
+    por_decidir: 0,
+    invitado: 0,
+    si: 0,
+    no: 0,
+    quizas: 0,
+  };
   for (const status of statusByGuestId.values()) {
     counts[status] += 1;
   }

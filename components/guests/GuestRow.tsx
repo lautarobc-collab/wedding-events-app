@@ -1,23 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteGuest, updateGuest } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
-import { guestAttendingStatus } from "@/lib/rsvp";
 import {
-  ATTENDING_LABEL,
-  type Guest,
-  type GuestCompanion,
-  type RsvpResponse,
-} from "@/lib/types";
+  deleteGuest,
+  setGuestAttending,
+  setInvitationStatus,
+  updateGuest,
+} from "@/app/(dashboard)/eventos/[id]/invitados/actions";
+import { guestAttendingStatus, guestStatus, GUEST_STATUS_LABEL, type GuestStatus } from "@/lib/rsvp";
+import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
 import { CopyRsvpLinkButton } from "./CopyRsvpLinkButton";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
 import { DietarySelect } from "@/components/DietarySelect";
 import { CompanionsField } from "./CompanionsField";
+
+const STATUS_STYLES: Record<GuestStatus, string> = {
+  por_decidir: "bg-neutral-100 text-neutral-700",
+  invitado: "bg-blue-100 text-blue-700",
+  si: "bg-green-100 text-green-700",
+  no: "bg-red-100 text-red-700",
+  quizas: "bg-amber-100 text-amber-700",
+};
 
 export function GuestRow({
   eventId,
@@ -31,6 +39,7 @@ export function GuestRow({
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [statusPending, setStatusPending] = useState(false);
   const {
     register,
     control,
@@ -65,9 +74,29 @@ export function GuestRow({
     router.refresh();
   }
 
-  const attendingStatus = guestAttendingStatus(guest.rsvp_responses);
-  const status =
-    attendingStatus === "pendiente" ? "Sin responder" : ATTENDING_LABEL[attendingStatus];
+  const attending = guestAttendingStatus(guest.rsvp_responses);
+  const status = guestStatus(guest.invitation_status, guest.rsvp_responses);
+  // Antes de tener una respuesta firme, se puede mover por el ciclo de
+  // invitación; en cuanto hay una (propia o registrada a mano), esa manda y
+  // el paso de "invitación enviada" deja de tener sentido como opción.
+  const statusOptions: GuestStatus[] =
+    attending === "pendiente" ? ["por_decidir", "invitado", "si", "no", "quizas"] : ["si", "no", "quizas"];
+
+  async function handleStatusChange(event: ChangeEvent<HTMLSelectElement>) {
+    const value = event.target.value as GuestStatus;
+    setStatusPending(true);
+    const result =
+      value === "por_decidir" || value === "invitado"
+        ? await setInvitationStatus(guest.id, eventId, value)
+        : await setGuestAttending(guest.id, eventId, value);
+    setStatusPending(false);
+    if (result?.error) {
+      setServerError(result.error);
+      return;
+    }
+    router.refresh();
+  }
+
   const childrenCount = guest.guest_companions.filter((c) => c.is_child).length;
 
   return (
@@ -84,9 +113,8 @@ export function GuestRow({
               {guest.first_name} {guest.last_name ?? ""}
             </p>
             <p className="text-neutral-500">
-              {status}
               {guest.guest_companions.length > 0
-                ? ` · +${guest.guest_companions.length} acompañantes invitados`
+                ? `+${guest.guest_companions.length} acompañantes invitados`
                 : ""}
               {childrenCount > 0 ? ` (${childrenCount} niños)` : ""}
               {guest.table_number != null ? ` · Mesa ${guest.table_number}` : ""}
@@ -150,6 +178,19 @@ export function GuestRow({
 
       {!editing && (
         <div className="flex items-center gap-3">
+          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          <select
+            value={status}
+            disabled={statusPending}
+            onChange={handleStatusChange}
+            className={`rounded-full border-0 px-2 py-1 text-xs font-medium disabled:opacity-50 ${STATUS_STYLES[status]}`}
+          >
+            {statusOptions.map((option) => (
+              <option key={option} value={option}>
+                {GUEST_STATUS_LABEL[option]}
+              </option>
+            ))}
+          </select>
           {slug && <CopyRsvpLinkButton slug={slug} guestId={guest.id} />}
           <ConfirmDeleteButton
             confirmMessage={`¿Eliminar a ${guest.first_name}?`}

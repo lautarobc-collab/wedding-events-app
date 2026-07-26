@@ -30,6 +30,7 @@ export type BudgetItem = {
   description: string;
   estimated: number;
   actual: number;
+  vendor_id: string | null;
 };
 
 export type AttendingStatus = "si" | "no" | "quizas";
@@ -38,6 +39,13 @@ export const ATTENDING_LABEL: Record<AttendingStatus, string> = {
   si: "Confirmado",
   no: "No asiste",
   quizas: "Quizás",
+};
+
+export type InvitationStatus = "por_decidir" | "invitado";
+
+export const INVITATION_STATUS_LABEL: Record<InvitationStatus, string> = {
+  por_decidir: "Por decidir",
+  invitado: "Invitación enviada",
 };
 
 export type Guest = {
@@ -51,6 +59,7 @@ export type Guest = {
   table_number: number | null;
   gift_description: string | null;
   thank_you_sent: boolean;
+  invitation_status: InvitationStatus;
 };
 
 export type GuestCompanion = {
