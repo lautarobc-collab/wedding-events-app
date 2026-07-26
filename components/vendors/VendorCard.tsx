@@ -79,7 +79,7 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
 
             {vendor.status === "elegido" && (
               <p className="text-xs text-neutral-400">
-                Cuenta como gasto de esta categoría en Presupuesto.
+                Tiene una línea de gasto vinculada en Presupuesto.
               </p>
             )}
 
