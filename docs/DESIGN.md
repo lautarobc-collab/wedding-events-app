@@ -39,7 +39,6 @@ create table categories (
   id uuid primary key default gen_random_uuid(),
   event_id uuid references events not null,
   name text not null, -- ej. "Catering", "Flores", "Fotografía"
-  estimated_amount numeric default 0,
   sort_order int default 0
 );
 
@@ -69,7 +68,12 @@ create table tasks (
   title text not null,
   due_date date,
   status text default 'sin_empezar', -- 'sin_empezar' | 'en_curso' | 'completado'
-  notes text
+  notes text,
+  -- vínculo opcional, como mucho a una de las cuatro (ver migración 0010)
+  guest_id uuid references guests,
+  budget_item_id uuid references budget_items,
+  vendor_id uuid references vendors,
+  category_id uuid references categories
 );
 
 create table guests (
