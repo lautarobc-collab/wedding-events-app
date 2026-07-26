@@ -1,7 +1,10 @@
 import { getEvent } from "@/lib/events";
+import { createClient } from "@/lib/supabase/server";
 import { EditEventForm } from "@/components/events/EditEventForm";
+import { QuickAddPanel } from "@/components/dashboard/QuickAddPanel";
 import { EVENT_TYPE_LABEL } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
+import type { Category } from "@/lib/types";
 
 export default async function EventSummaryPage({
   params,
@@ -12,6 +15,14 @@ export default async function EventSummaryPage({
   const event = await getEvent(id);
 
   if (!event) return null;
+
+  const supabase = await createClient();
+  const { data: categoriesData } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("event_id", id)
+    .order("sort_order", { ascending: true })
+    .returns<Category[]>();
 
   return (
     <div className="flex flex-col gap-6">
@@ -36,9 +47,7 @@ export default async function EventSummaryPage({
 
       <EditEventForm event={event} />
 
-      <p className="text-sm text-neutral-500">
-        Próximas tareas y más métricas llegan en fases siguientes.
-      </p>
+      <QuickAddPanel eventId={event.id} categories={categoriesData ?? []} />
     </div>
   );
 }
