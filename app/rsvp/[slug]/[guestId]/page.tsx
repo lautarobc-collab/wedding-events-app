@@ -45,6 +45,12 @@ export default async function RsvpPage({
         </p>
       </div>
       <RsvpForm slug={slug} guestId={guestId} invite={invite} />
+
+      <p className="text-xs text-neutral-400">
+        Estos datos (tu respuesta, acompañantes y restricciones alimentarias) los ve
+        únicamente quien organiza este evento, para preparar mesas y catering. No se
+        comparten con nadie más ni se usan con otro fin.
+      </p>
     </main>
   );
 }
