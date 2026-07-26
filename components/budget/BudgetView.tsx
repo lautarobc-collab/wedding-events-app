@@ -52,7 +52,7 @@ export function BudgetView({
         ))}
       </div>
 
-      <NewCategoryForm eventId={eventId} nextSortOrder={categories.length} />
+      <NewCategoryForm eventId={eventId} categories={categories} />
     </>
   );
 }
