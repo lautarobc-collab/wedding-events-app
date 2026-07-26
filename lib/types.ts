@@ -20,7 +20,6 @@ export type Category = {
   id: string;
   event_id: string;
   name: string;
-  estimated_amount: number;
   sort_order: number;
 };
 

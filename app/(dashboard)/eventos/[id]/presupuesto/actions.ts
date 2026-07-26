@@ -17,7 +17,6 @@ export async function createCategory(eventId: string, name: string, sortOrder: n
   const { error } = await supabase.from("categories").insert({
     event_id: eventId,
     name: parsed.data.name,
-    estimated_amount: 0,
     sort_order: sortOrder,
   });
 
