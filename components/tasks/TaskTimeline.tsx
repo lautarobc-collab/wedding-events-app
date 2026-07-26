@@ -1,8 +1,22 @@
 import { groupTasksByMonth } from "@/lib/taskGroups";
 import { TaskRow } from "./TaskRow";
-import type { Task } from "@/lib/types";
+import type { BudgetItem, Category, Guest, Task, Vendor } from "@/lib/types";
 
-export function TaskTimeline({ eventId, tasks }: { eventId: string; tasks: Task[] }) {
+export function TaskTimeline({
+  eventId,
+  tasks,
+  guests,
+  budgetItems,
+  vendors,
+  categories,
+}: {
+  eventId: string;
+  tasks: Task[];
+  guests: Guest[];
+  budgetItems: BudgetItem[];
+  vendors: Vendor[];
+  categories: Category[];
+}) {
   const groups = groupTasksByMonth(tasks);
 
   if (groups.length === 0) {
@@ -18,7 +32,15 @@ export function TaskTimeline({ eventId, tasks }: { eventId: string; tasks: Task[
           </h3>
           <div className="flex flex-col gap-2">
             {group.tasks.map((task) => (
-              <TaskRow key={task.id} eventId={eventId} task={task} />
+              <TaskRow
+                key={task.id}
+                eventId={eventId}
+                task={task}
+                guests={guests}
+                budgetItems={budgetItems}
+                vendors={vendors}
+                categories={categories}
+              />
             ))}
           </div>
         </div>

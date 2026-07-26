@@ -96,6 +96,10 @@ export type Task = {
   due_date: string | null;
   status: TaskStatus;
   notes: string | null;
+  guest_id: string | null;
+  budget_item_id: string | null;
+  vendor_id: string | null;
+  category_id: string | null;
 };
 
 export type VendorStatus = "candidato" | "contactado" | "elegido" | "descartado";

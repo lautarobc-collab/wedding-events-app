@@ -3,8 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { taskSchema, type TaskFormValues } from "@/lib/validations/task";
+import type { TaskLinkColumns } from "@/lib/taskLinks";
 
-export async function createTask(eventId: string, values: TaskFormValues) {
+const noLink: TaskLinkColumns = {
+  guest_id: null,
+  budget_item_id: null,
+  vendor_id: null,
+  category_id: null,
+};
+
+export async function createTask(
+  eventId: string,
+  values: TaskFormValues,
+  link: TaskLinkColumns = noLink,
+) {
   const parsed = taskSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
@@ -17,6 +29,7 @@ export async function createTask(eventId: string, values: TaskFormValues) {
     due_date: due_date || null,
     status,
     notes: notes || null,
+    ...link,
   });
 
   if (error) return { error: error.message };
@@ -30,6 +43,7 @@ export async function updateTask(
   taskId: string,
   eventId: string,
   values: TaskFormValues,
+  link: TaskLinkColumns = noLink,
 ) {
   const parsed = taskSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
@@ -44,6 +58,7 @@ export async function updateTask(
       due_date: due_date || null,
       status,
       notes: notes || null,
+      ...link,
     })
     .eq("id", taskId);
 
