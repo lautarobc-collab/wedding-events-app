@@ -13,18 +13,16 @@ import {
   type BudgetItemFormValues,
 } from "@/lib/validations/budgetItem";
 import { formatMoney } from "@/lib/format";
-import type { BudgetItem, Vendor } from "@/lib/types";
+import type { BudgetItem } from "@/lib/types";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
 
 export function BudgetItemRow({
   eventId,
   item,
-  vendors,
 }: {
   eventId: string;
   item: BudgetItem;
-  vendors: Vendor[];
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -39,11 +37,8 @@ export function BudgetItemRow({
       description: item.description,
       estimated: item.estimated,
       actual: item.actual,
-      vendor_id: item.vendor_id ?? "",
     },
   });
-
-  const linkedVendor = vendors.find((vendor) => vendor.id === item.vendor_id);
 
   async function onSubmit(values: BudgetItemFormValues) {
     setServerError(null);
@@ -64,14 +59,7 @@ export function BudgetItemRow({
         onCancel={() => setEditing(false)}
         onCommit={handleSubmit(onSubmit)}
         className="flex-1"
-        display={
-          <span>
-            {item.description}
-            {linkedVendor && (
-              <span className="text-xs text-neutral-400"> · proveedor: {linkedVendor.name}</span>
-            )}
-          </span>
-        }
+        display={<span>{item.description}</span>}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-end gap-2">
           <input
@@ -93,19 +81,6 @@ export function BudgetItemRow({
             {...register("actual", { valueAsNumber: true })}
             className="w-24 rounded border border-neutral-300 px-2 py-1"
           />
-          {vendors.length > 0 && (
-            <select
-              {...register("vendor_id")}
-              className="rounded border border-neutral-300 px-2 py-1"
-            >
-              <option value="">Sin proveedor</option>
-              {vendors.map((vendor) => (
-                <option key={vendor.id} value={vendor.id}>
-                  {vendor.name}
-                </option>
-              ))}
-            </select>
-          )}
           {errors.description && (
             <p className="text-sm text-red-600">{errors.description.message}</p>
           )}

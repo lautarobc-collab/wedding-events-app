@@ -1,30 +1,36 @@
 "use client";
 
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { GUEST_STATUS_LABEL, type GuestStatus } from "@/lib/rsvp";
+import type { AttendingStatus } from "@/lib/types";
 
-const COLORS: Record<GuestStatus, string> = {
-  por_decidir: "#a3a3a3",
-  invitado: "#2563eb",
+type FilterValue = AttendingStatus | "pendiente";
+
+const COLORS: Record<FilterValue, string> = {
   si: "#16a34a",
   no: "#dc2626",
   quizas: "#ca8a04",
+  pendiente: "#a3a3a3",
 };
 
-const ORDER: GuestStatus[] = ["por_decidir", "invitado", "si", "quizas", "no"];
+const LABELS: Record<FilterValue, string> = {
+  si: "Confirmado",
+  no: "No asiste",
+  quizas: "Quizás",
+  pendiente: "Sin responder",
+};
 
 export function GuestChart({
   counts,
   selected,
   onSelect,
 }: {
-  counts: Record<GuestStatus, number>;
-  selected: GuestStatus | null;
-  onSelect: (value: GuestStatus | null) => void;
+  counts: Record<FilterValue, number>;
+  selected: FilterValue | null;
+  onSelect: (value: FilterValue | null) => void;
 }) {
-  const data = ORDER.map((key) => ({ key, name: GUEST_STATUS_LABEL[key], value: counts[key] })).filter(
-    (datum) => datum.value > 0,
-  );
+  const data = (Object.keys(LABELS) as FilterValue[])
+    .map((key) => ({ key, name: LABELS[key], value: counts[key] }))
+    .filter((datum) => datum.value > 0);
 
   if (data.length === 0) return null;
 
@@ -41,7 +47,7 @@ export function GuestChart({
             radius={[0, 4, 4, 0]}
             className="cursor-pointer"
             onClick={(bar) => {
-              const key = (bar.payload as { key: GuestStatus } | undefined)?.key;
+              const key = (bar.payload as { key: FilterValue } | undefined)?.key;
               if (!key) return;
               onSelect(key === selected ? null : key);
             }}

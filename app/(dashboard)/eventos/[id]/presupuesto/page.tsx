@@ -26,14 +26,9 @@ export default async function BudgetPage({
   const categoriesRaw = categoriesData ?? [];
   const categories: Category[] = categoriesRaw;
   const items = categoriesRaw.flatMap((category) => category.budget_items);
-  const vendors = categoriesRaw.flatMap((category) => category.vendors);
-  // Un proveedor "elegido" con un gasto ya vinculado no se vuelve a sumar
-  // aparte: el gasto vinculado es el que manda, para no contar el mismo
-  // coste dos veces.
-  const linkedVendorIds = new Set(items.map((item) => item.vendor_id).filter(Boolean));
-  const chosenVendors = vendors.filter(
-    (vendor) => vendor.status === "elegido" && !linkedVendorIds.has(vendor.id),
-  );
+  const chosenVendors = categoriesRaw
+    .flatMap((category) => category.vendors)
+    .filter((vendor) => vendor.status === "elegido");
 
   return (
     <div className="flex flex-col gap-6">
@@ -43,7 +38,6 @@ export default async function BudgetPage({
         totalBudget={event.total_budget}
         categories={categories}
         items={items}
-        vendors={vendors}
         chosenVendors={chosenVendors}
       />
     </div>
