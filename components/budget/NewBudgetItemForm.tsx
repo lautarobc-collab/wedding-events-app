@@ -9,13 +9,16 @@ import {
   budgetItemSchema,
   type BudgetItemFormValues,
 } from "@/lib/validations/budgetItem";
+import type { Vendor } from "@/lib/types";
 
 export function NewBudgetItemForm({
   eventId,
   categoryId,
+  vendors,
 }: {
   eventId: string;
   categoryId: string;
+  vendors: Vendor[];
 }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -26,7 +29,7 @@ export function NewBudgetItemForm({
     formState: { errors, isSubmitting },
   } = useForm<BudgetItemFormValues>({
     resolver: zodResolver(budgetItemSchema),
-    defaultValues: { estimated: 0, actual: 0 },
+    defaultValues: { estimated: 0, actual: 0, vendor_id: "" },
   });
 
   async function onSubmit(values: BudgetItemFormValues) {
@@ -36,7 +39,7 @@ export function NewBudgetItemForm({
       setServerError(result.error);
       return;
     }
-    reset({ description: "", estimated: 0, actual: 0 });
+    reset({ description: "", estimated: 0, actual: 0, vendor_id: "" });
     router.refresh();
   }
 
@@ -74,6 +77,22 @@ export function NewBudgetItemForm({
           className="w-28 rounded border border-neutral-300 px-2 py-1"
         />
       </div>
+      {vendors.length > 0 && (
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Proveedor (opcional)</label>
+          <select
+            {...register("vendor_id")}
+            className="rounded border border-neutral-300 px-2 py-1"
+          >
+            <option value="">Ninguno</option>
+            {vendors.map((vendor) => (
+              <option key={vendor.id} value={vendor.id}>
+                {vendor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <button
         type="submit"
         disabled={isSubmitting}

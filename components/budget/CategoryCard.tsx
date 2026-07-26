@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCategory, deleteCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
 import { categorySchema, type CategoryFormValues } from "@/lib/validations/category";
 import { formatMoney } from "@/lib/format";
+import { sumBudget } from "@/lib/budget";
 import type { BudgetItem, Category, Vendor } from "@/lib/types";
 import { BudgetItemRow } from "./BudgetItemRow";
 import { NewBudgetItemForm } from "./NewBudgetItemForm";
@@ -17,11 +18,13 @@ export function CategoryCard({
   eventId,
   category,
   items,
+  vendors,
   chosenVendors,
 }: {
   eventId: string;
   category: Category;
   items: BudgetItem[];
+  vendors: Vendor[];
   chosenVendors: Vendor[];
 }) {
   const router = useRouter();
@@ -36,12 +39,7 @@ export function CategoryCard({
     defaultValues: { name: category.name },
   });
 
-  const estimated =
-    items.reduce((sum, i) => sum + i.estimated, 0) +
-    chosenVendors.reduce((sum, v) => sum + (v.estimated ?? 0), 0);
-  const actual =
-    items.reduce((sum, i) => sum + i.actual, 0) +
-    chosenVendors.reduce((sum, v) => sum + (v.actual ?? 0), 0);
+  const { estimated, actual } = sumBudget(items, chosenVendors);
 
   async function onSubmit(values: CategoryFormValues) {
     setServerError(null);
@@ -106,7 +104,7 @@ export function CategoryCard({
         ))}
 
         {items.map((item) => (
-          <BudgetItemRow key={item.id} eventId={eventId} item={item} />
+          <BudgetItemRow key={item.id} eventId={eventId} item={item} vendors={vendors} />
         ))}
 
         {items.length === 0 && chosenVendors.length === 0 && (
@@ -114,7 +112,7 @@ export function CategoryCard({
         )}
       </div>
 
-      <NewBudgetItemForm eventId={eventId} categoryId={category.id} />
+      <NewBudgetItemForm eventId={eventId} categoryId={category.id} vendors={vendors} />
     </div>
   );
 }

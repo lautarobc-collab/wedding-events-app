@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
+import type { AttendingStatus, InvitationStatus } from "@/lib/types";
 
 export async function createGuest(eventId: string, values: GuestFormValues) {
   const parsed = guestSchema.safeParse(values);
@@ -48,6 +49,7 @@ export async function createGuest(eventId: string, values: GuestFormValues) {
   }
 
   revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -106,6 +108,7 @@ export async function updateGuest(
   }
 
   revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
   return { success: true };
 }
 
@@ -114,6 +117,7 @@ export async function deleteGuest(guestId: string, eventId: string) {
   const { error } = await supabase.from("guests").delete().eq("id", guestId);
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
 }
 
 export async function toggleThankYouSent(
@@ -128,4 +132,39 @@ export async function toggleThankYouSent(
     .eq("id", guestId);
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/invitados`);
+}
+
+export async function setInvitationStatus(
+  guestId: string,
+  eventId: string,
+  status: InvitationStatus,
+) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("guests")
+    .update({ invitation_status: status })
+    .eq("id", guestId);
+  if (error) return { error: error.message };
+  revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
+  return { success: true };
+}
+
+// Registra la respuesta como si el invitado la hubiera dado él mismo en el
+// RSVP público (misma tabla, mismo criterio para el estado más reciente):
+// permite confirmar desde el panel sin esperar a que responda por su cuenta.
+export async function setGuestAttending(
+  guestId: string,
+  eventId: string,
+  attending: AttendingStatus,
+) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("rsvp_responses").insert({
+    guest_id: guestId,
+    attending,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
+  return { success: true };
 }
