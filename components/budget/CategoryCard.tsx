@@ -91,7 +91,7 @@ export function CategoryCard({
         {chosenVendors.map((vendor) => (
           <div
             key={vendor.id}
-            className="flex items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm"
+            className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm"
           >
             <span>
               {vendor.name}{" "}

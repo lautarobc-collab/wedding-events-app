@@ -177,7 +177,7 @@ export function GuestRow({
       </InlineEditable>
 
       {!editing && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-3">
           {serverError && <p className="text-sm text-red-600">{serverError}</p>}
           <select
             value={status}

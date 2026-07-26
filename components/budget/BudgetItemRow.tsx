@@ -57,7 +57,7 @@ export function BudgetItemRow({
   }
 
   return (
-    <div className="flex items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm">
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -114,7 +114,7 @@ export function BudgetItemRow({
       </InlineEditable>
 
       {!editing && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="text-neutral-500">
             {formatMoney(item.estimated)} est. / {formatMoney(item.actual)} real
           </span>
