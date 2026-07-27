@@ -72,7 +72,6 @@ export function RsvpForm({
         <label className="text-sm font-medium">¿Asistirás?</label>
         <select
           {...register("attending")}
-          defaultValue=""
           className="rounded border border-neutral-300 px-3 py-2"
         >
           <option value="" disabled>
