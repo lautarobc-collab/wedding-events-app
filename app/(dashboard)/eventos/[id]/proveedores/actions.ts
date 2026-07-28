@@ -140,3 +140,65 @@ export async function deleteVendor(vendorId: string, eventId: string) {
   revalidatePath(`/eventos/${eventId}/presupuesto`);
   revalidatePath(`/eventos/${eventId}`);
 }
+
+const ALLOWED_ATTACHMENT_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+]);
+const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+
+export async function uploadVendorAttachment(vendorId: string, eventId: string, formData: FormData) {
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Elige un archivo." };
+  }
+  if (!ALLOWED_ATTACHMENT_TYPES.has(file.type)) {
+    return { error: "Solo se admiten PDF o imágenes (PNG, JPEG, WEBP)." };
+  }
+  if (file.size > MAX_ATTACHMENT_BYTES) {
+    return { error: "El archivo pesa demasiado (máximo 10 MB)." };
+  }
+
+  const supabase = await createClient();
+  const filePath = `${vendorId}/${crypto.randomUUID()}-${file.name}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("vendor-attachments")
+    .upload(filePath, file, { contentType: file.type });
+  if (uploadError) return { error: uploadError.message };
+
+  const { error: insertError } = await supabase.from("vendor_attachments").insert({
+    vendor_id: vendorId,
+    file_path: filePath,
+    file_name: file.name,
+    content_type: file.type,
+    size_bytes: file.size,
+  });
+  if (insertError) {
+    await supabase.storage.from("vendor-attachments").remove([filePath]);
+    return { error: insertError.message };
+  }
+
+  revalidatePath(`/eventos/${eventId}/proveedores`);
+  return { success: true };
+}
+
+export async function deleteVendorAttachment(
+  attachmentId: string,
+  filePath: string,
+  eventId: string,
+) {
+  const supabase = await createClient();
+  const { error: storageError } = await supabase.storage
+    .from("vendor-attachments")
+    .remove([filePath]);
+  if (storageError) return { error: storageError.message };
+
+  const { error } = await supabase.from("vendor_attachments").delete().eq("id", attachmentId);
+  if (error) return { error: error.message };
+
+  revalidatePath(`/eventos/${eventId}/proveedores`);
+  return { success: true };
+}

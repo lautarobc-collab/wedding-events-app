@@ -122,3 +122,13 @@ export type Vendor = {
   status: VendorStatus;
   notes: string | null;
 };
+
+export type VendorAttachment = {
+  id: string;
+  vendor_id: string;
+  file_path: string;
+  file_name: string;
+  content_type: string;
+  size_bytes: number;
+  created_at: string;
+};

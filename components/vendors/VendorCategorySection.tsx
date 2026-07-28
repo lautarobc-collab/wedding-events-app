@@ -1,14 +1,18 @@
-import type { Category, Vendor } from "@/lib/types";
+import type { Category, Vendor, VendorAttachment } from "@/lib/types";
 import { VendorCard } from "./VendorCard";
+
+type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 
 export function VendorCategorySection({
   eventId,
   category,
   vendors,
+  signedUrlByPath,
 }: {
   eventId: string;
   category: Category;
-  vendors: Vendor[];
+  vendors: VendorWithAttachments[];
+  signedUrlByPath: Map<string, string>;
 }) {
   if (vendors.length === 0) return null;
 
@@ -18,7 +22,13 @@ export function VendorCategorySection({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {vendors.map((vendor) => (
-          <VendorCard key={vendor.id} eventId={eventId} vendor={vendor} />
+          <VendorCard
+            key={vendor.id}
+            eventId={eventId}
+            vendor={vendor}
+            attachments={vendor.vendor_attachments}
+            signedUrlByPath={signedUrlByPath}
+          />
         ))}
       </div>
     </div>

@@ -6,10 +6,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteVendor, updateVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
 import { formatMoney } from "@/lib/format";
-import { VENDOR_STATUS_LABEL, type Vendor, type VendorStatus } from "@/lib/types";
+import { VENDOR_STATUS_LABEL, type Vendor, type VendorAttachment, type VendorStatus } from "@/lib/types";
 import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
+import { VendorAttachments } from "./VendorAttachments";
 
 const STATUS_STYLES: Record<VendorStatus, string> = {
   candidato: "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300",
@@ -18,7 +19,17 @@ const STATUS_STYLES: Record<VendorStatus, string> = {
   descartado: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 line-through",
 };
 
-export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendor }) {
+export function VendorCard({
+  eventId,
+  vendor,
+  attachments,
+  signedUrlByPath,
+}: {
+  eventId: string;
+  vendor: Vendor;
+  attachments: VendorAttachment[];
+  signedUrlByPath: Map<string, string>;
+}) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -155,13 +166,19 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
       </InlineEditable>
 
       {!editing && (
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col gap-2">
           <ConfirmDeleteButton
             confirmMessage={`¿Eliminar a "${vendor.name}"?`}
             onConfirm={async () => {
               await deleteVendor(vendor.id, eventId);
               router.refresh();
             }}
+          />
+          <VendorAttachments
+            eventId={eventId}
+            vendorId={vendor.id}
+            attachments={attachments}
+            signedUrlByPath={signedUrlByPath}
           />
         </div>
       )}
