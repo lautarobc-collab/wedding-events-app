@@ -13,7 +13,7 @@ import {
 import { guestAttendingStatus, guestStatus, GUEST_STATUS_LABEL, type GuestStatus } from "@/lib/rsvp";
 import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
-import { CopyRsvpLinkButton } from "./CopyRsvpLinkButton";
+import { ShareRsvpButton } from "./ShareRsvpButton";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
 import { DietarySelect } from "@/components/DietarySelect";
@@ -191,7 +191,13 @@ export function GuestRow({
               </option>
             ))}
           </select>
-          {slug && <CopyRsvpLinkButton slug={slug} guestId={guest.id} />}
+          {slug && (
+            <ShareRsvpButton
+              slug={slug}
+              guestId={guest.id}
+              guestName={guest.first_name}
+            />
+          )}
           <ConfirmDeleteButton
             confirmMessage={`¿Eliminar a ${guest.first_name}?`}
             onConfirm={async () => {
