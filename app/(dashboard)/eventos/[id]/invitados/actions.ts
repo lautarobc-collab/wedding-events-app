@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
+import { parseGuestCsv } from "@/lib/importGuests";
 import type { AttendingStatus, InvitationStatus } from "@/lib/types";
 
 export async function createGuest(eventId: string, values: GuestFormValues) {
@@ -110,6 +111,33 @@ export async function updateGuest(
   revalidatePath(`/eventos/${eventId}/invitados`);
   revalidatePath(`/eventos/${eventId}`);
   return { success: true };
+}
+
+export async function importGuests(
+  eventId: string,
+  rawText: string,
+): Promise<{ ok: false; error: string } | { ok: true; imported: number; skipped: number }> {
+  const { rows, skipped } = parseGuestCsv(rawText);
+  if (rows.length === 0) {
+    return { ok: false, error: "No se encontraron invitados válidos para importar." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("guests").insert(
+    rows.map((row) => ({
+      event_id: eventId,
+      first_name: row.first_name,
+      last_name: row.last_name,
+      email: row.email,
+      invited_by: row.invited_by,
+    })),
+  );
+
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}`);
+  return { ok: true, imported: rows.length, skipped };
 }
 
 export async function deleteGuest(guestId: string, eventId: string) {

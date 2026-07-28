@@ -5,6 +5,7 @@ import { GuestSummary } from "./GuestSummary";
 import { GuestChart } from "./GuestChart";
 import { GuestRow } from "./GuestRow";
 import { NewGuestForm } from "./NewGuestForm";
+import { ImportGuestsForm } from "./ImportGuestsForm";
 import { guestStatus, type GuestStatus } from "@/lib/rsvp";
 import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 
@@ -62,6 +63,7 @@ export function GuestView({
       </div>
 
       <NewGuestForm eventId={eventId} />
+      <ImportGuestsForm eventId={eventId} />
     </>
   );
 }
