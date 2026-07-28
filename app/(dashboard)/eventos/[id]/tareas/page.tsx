@@ -3,7 +3,10 @@ import { getEvent } from "@/lib/events";
 import { TaskSummary } from "@/components/tasks/TaskSummary";
 import { TaskTimeline } from "@/components/tasks/TaskTimeline";
 import { NewTaskForm } from "@/components/tasks/NewTaskForm";
-import type { BudgetItem, Category, Guest, Task, Vendor } from "@/lib/types";
+import { ExportCsvButton } from "@/components/ExportCsvButton";
+import { toCsv } from "@/lib/exportCsv";
+import { describeTaskLink } from "@/lib/taskLinks";
+import { TASK_STATUS_LABEL, type BudgetItem, type Category, type Guest, type Task, type Vendor } from "@/lib/types";
 
 export default async function TasksPage({
   params,
@@ -60,9 +63,22 @@ export default async function TasksPage({
   const budgetItems = budgetItemsData ?? [];
   const vendors = vendorsData ?? [];
 
+  const csv = toCsv(tasks, [
+    { label: "Título", value: (t) => t.title },
+    { label: "Estado", value: (t) => TASK_STATUS_LABEL[t.status] },
+    { label: "Fecha límite", value: (t) => t.due_date },
+    { label: "Notas", value: (t) => t.notes },
+    {
+      label: "Vinculada a",
+      value: (t) => describeTaskLink(t, event.id, { guests, budgetItems, vendors, categories })?.label,
+    },
+  ]);
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">Tareas</h1>
+
+      <ExportCsvButton filename="tareas.csv" csv={csv} />
 
       <TaskSummary tasks={tasks} />
 

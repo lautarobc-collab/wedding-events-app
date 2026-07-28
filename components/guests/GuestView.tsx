@@ -6,7 +6,9 @@ import { GuestChart } from "./GuestChart";
 import { GuestRow } from "./GuestRow";
 import { NewGuestForm } from "./NewGuestForm";
 import { ImportGuestsForm } from "./ImportGuestsForm";
-import { guestStatus, type GuestStatus } from "@/lib/rsvp";
+import { ExportCsvButton } from "@/components/ExportCsvButton";
+import { guestStatus, latestRsvp, GUEST_STATUS_LABEL, type GuestStatus } from "@/lib/rsvp";
+import { toCsv } from "@/lib/exportCsv";
 import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
 
 type GuestWithChildren = Guest & {
@@ -44,8 +46,21 @@ export function GuestView({
     ? guests.filter((guest) => statusByGuestId.get(guest.id) === selected)
     : guests;
 
+  const csv = toCsv(guests, [
+    { label: "Nombre", value: (g) => g.first_name },
+    { label: "Apellidos", value: (g) => g.last_name },
+    { label: "Email", value: (g) => g.email },
+    { label: "Invitado por", value: (g) => g.invited_by },
+    { label: "Mesa", value: (g) => g.table_number },
+    { label: "Estado", value: (g) => GUEST_STATUS_LABEL[statusByGuestId.get(g.id)!] },
+    { label: "Acompañantes confirmados", value: (g) => latestRsvp(g.rsvp_responses)?.confirmed_plus_ones },
+    { label: "Niños confirmados", value: (g) => latestRsvp(g.rsvp_responses)?.confirmed_children },
+    { label: "Restricciones alimentarias", value: (g) => g.dietary_restrictions },
+  ]);
+
   return (
     <>
+      <ExportCsvButton filename="invitados.csv" csv={csv} />
       <GuestSummary guests={guests} />
       <GuestChart counts={counts} selected={selected} onSelect={setSelected} />
 
