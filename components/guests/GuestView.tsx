@@ -69,7 +69,7 @@ export function GuestView({
           <GuestRow key={guest.id} eventId={eventId} slug={slug} guest={guest} />
         ))}
         {visibleGuests.length === 0 && (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {guests.length === 0
               ? "Todavía no añadiste invitados."
               : "Ningún invitado coincide con el filtro."}

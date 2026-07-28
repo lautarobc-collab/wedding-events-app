@@ -34,7 +34,7 @@ export function NewEventForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-3 rounded border border-neutral-200 p-4"
+      className="flex flex-col gap-3 rounded border border-neutral-200 dark:border-neutral-800 p-4"
     >
       <h2 className="font-medium">Nuevo evento</h2>
 
@@ -45,10 +45,10 @@ export function NewEventForm() {
         <input
           id="name"
           {...register("name")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
         {errors.name && (
-          <p className="text-sm text-red-600">{errors.name.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
         )}
       </div>
 
@@ -59,7 +59,7 @@ export function NewEventForm() {
         <select
           id="event_type"
           {...register("event_type")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         >
           <option value="boda">Boda</option>
           <option value="evento_generico">Evento genérico</option>
@@ -74,7 +74,7 @@ export function NewEventForm() {
           id="event_date"
           type="date"
           {...register("event_date")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
       </div>
 
@@ -89,19 +89,19 @@ export function NewEventForm() {
           {...register("total_budget", {
             setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
         {errors.total_budget && (
-          <p className="text-sm text-red-600">{errors.total_budget.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.total_budget.message}</p>
         )}
       </div>
 
-      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+      {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="self-start rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Creando..." : "Crear evento"}
       </button>

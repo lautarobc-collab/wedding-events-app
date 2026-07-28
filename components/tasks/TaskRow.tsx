@@ -66,7 +66,7 @@ export function TaskRow({
   return (
     <div
       className={`flex flex-wrap items-center justify-between gap-2 rounded border px-4 py-3 text-sm ${
-        overdue ? "border-red-200 bg-red-50" : "border-neutral-200"
+        overdue ? "border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950" : "border-neutral-200 dark:border-neutral-800"
       }`}
     >
       <InlineEditable
@@ -82,7 +82,7 @@ export function TaskRow({
         display={
           <div>
             <p className="font-medium">{task.title}</p>
-            <p className={overdue ? "text-red-600" : "text-neutral-500"}>
+            <p className={overdue ? "text-red-600 dark:text-red-400" : "text-neutral-500 dark:text-neutral-400"}>
               {TASK_STATUS_LABEL[task.status]}
               {task.due_date ? ` · Vence ${task.due_date}` : ""}
               {overdue ? " · Vencida" : ""}
@@ -91,7 +91,7 @@ export function TaskRow({
               <Link
                 href={link.href}
                 onClick={(event) => event.stopPropagation()}
-                className="mt-1 inline-block rounded-full border border-neutral-300 px-2 py-0.5 text-xs text-neutral-600 hover:border-neutral-400"
+                className="mt-1 inline-block rounded-full border border-neutral-300 dark:border-neutral-700 px-2 py-0.5 text-xs text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-600"
               >
                 {link.label}
               </Link>
@@ -105,16 +105,16 @@ export function TaskRow({
               autoFocus
               placeholder="Título"
               {...register("title")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               type="date"
               {...register("due_date")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <select
               {...register("status")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             >
               <option value="sin_empezar">Sin empezar</option>
               <option value="en_curso">En curso</option>
@@ -123,7 +123,7 @@ export function TaskRow({
             <input
               placeholder="Notas"
               {...register("notes")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
           <TaskLinkPicker
@@ -136,8 +136,8 @@ export function TaskRow({
             vendors={vendors}
             categories={categories}
           />
-          {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {errors.title && <p className="text-sm text-red-600 dark:text-red-400">{errors.title.message}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>
       </InlineEditable>
 

@@ -15,7 +15,7 @@ export default async function EventsPage() {
     <main className="mx-auto flex max-w-2xl flex-col gap-8 p-8">
       <div>
         <h1 className="text-xl font-semibold">Tus eventos</h1>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
           Elige un evento o crea uno nuevo.
         </p>
       </div>
@@ -26,7 +26,7 @@ export default async function EventsPage() {
         {events?.length ? (
           events.map((event) => <EventListItem key={event.id} event={event} />)
         ) : (
-          <p className="text-sm text-neutral-500">Todavía no tienes eventos.</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">Todavía no tienes eventos.</p>
         )}
       </ul>
     </main>

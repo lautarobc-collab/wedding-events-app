@@ -16,7 +16,7 @@ export function ImportGuestsForm({ eventId }: { eventId: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="self-start text-sm text-neutral-600 underline"
+        className="self-start text-sm text-neutral-600 dark:text-neutral-400 underline"
       >
         + Importar invitados desde CSV
       </button>
@@ -49,10 +49,10 @@ export function ImportGuestsForm({ eventId }: { eventId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-2 rounded border border-neutral-200 p-4"
+      className="flex flex-col gap-2 rounded border border-neutral-200 dark:border-neutral-800 p-4"
     >
       <h2 className="font-medium">Importar invitados desde CSV</h2>
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-neutral-500 dark:text-neutral-400">
         Pega una fila por invitado: Nombre;Apellidos;Email;Invitado por (también
         vale separado por comas). Solo el nombre es obligatorio.
       </p>
@@ -62,13 +62,13 @@ export function ImportGuestsForm({ eventId }: { eventId: string }) {
         value={text}
         onChange={(event) => setText(event.target.value)}
         placeholder={"Ana García;;ana@email.com;María\nLuis Pérez;;;Juan"}
-        className="rounded border border-neutral-300 px-2 py-1 font-mono text-sm"
+        className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1 font-mono text-sm"
       />
       <div className="flex items-center gap-3">
         <button
           type="submit"
           disabled={isSubmitting || !text.trim()}
-          className="self-start rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+          className="self-start rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
         >
           {isSubmitting ? "Importando..." : "Importar"}
         </button>
@@ -78,13 +78,13 @@ export function ImportGuestsForm({ eventId }: { eventId: string }) {
             setOpen(false);
             setMessage(null);
           }}
-          className="text-sm text-neutral-500 underline"
+          className="text-sm text-neutral-500 dark:text-neutral-400 underline"
         >
           Cancelar
         </button>
       </div>
       {message && (
-        <p className={`text-sm ${message.isError ? "text-red-600" : "text-neutral-600"}`}>
+        <p className={`text-sm ${message.isError ? "text-red-600 dark:text-red-400" : "text-neutral-600 dark:text-neutral-400"}`}>
           {message.text}
         </p>
       )}

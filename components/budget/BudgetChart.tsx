@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { formatMoney } from "@/lib/format";
 import { sumBudget } from "@/lib/budget";
+import { useIsDarkMode } from "@/lib/useIsDarkMode";
 import type { BudgetItem, Category, Vendor } from "@/lib/types";
 
 type ChartDatum = {
@@ -43,18 +44,24 @@ export function BudgetChart({
       return { id: category.id, name: category.name, estimated, actual };
     })
     .filter((datum) => datum.estimated > 0 || datum.actual > 0);
+  const isDark = useIsDarkMode();
 
   if (data.length === 0) return null;
 
   return (
-    <div className="rounded border border-neutral-200 p-4">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
       <p className="mb-2 text-sm font-medium">Gasto por categoría</p>
       <ResponsiveContainer width="100%" height={Math.max(160, data.length * 36)}>
         <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16 }}>
           <XAxis type="number" tickFormatter={(value: number) => formatMoney(value)} />
           <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 12 }} />
           <Tooltip formatter={(value) => formatMoney(Number(value))} />
-          <Bar dataKey="estimated" name="Estimado" fill="#e5e5e5" radius={[0, 4, 4, 0]} />
+          <Bar
+            dataKey="estimated"
+            name="Estimado"
+            fill={isDark ? "#404040" : "#e5e5e5"}
+            radius={[0, 4, 4, 0]}
+          />
           <Bar
             dataKey="actual"
             name="Gastado"
@@ -67,7 +74,18 @@ export function BudgetChart({
             }}
           >
             {data.map((datum) => (
-              <Cell key={datum.id} fill={datum.id === selectedCategoryId ? "#171717" : "#525252"} />
+              <Cell
+                key={datum.id}
+                fill={
+                  datum.id === selectedCategoryId
+                    ? isDark
+                      ? "#f5f5f5"
+                      : "#171717"
+                    : isDark
+                      ? "#a3a3a3"
+                      : "#525252"
+                }
+              />
             ))}
           </Bar>
         </BarChart>
@@ -76,7 +94,7 @@ export function BudgetChart({
         <button
           type="button"
           onClick={() => onSelectCategory(null)}
-          className="mt-2 text-sm text-neutral-600 underline"
+          className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 underline"
         >
           Quitar filtro
         </button>

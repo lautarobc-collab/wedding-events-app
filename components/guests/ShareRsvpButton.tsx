@@ -41,7 +41,7 @@ export function ShareRsvpButton({
       </button>
 
       {open && (
-        <div className="absolute right-0 z-10 mt-1 flex w-48 flex-col gap-2 rounded border border-neutral-200 bg-white p-3 text-sm shadow-lg">
+        <div className="absolute right-0 z-10 mt-1 flex w-48 flex-col gap-2 rounded border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-3 text-sm shadow-lg">
           <button type="button" onClick={handleCopy} className="text-left underline">
             {copied ? "¡Copiado!" : "Copiar enlace"}
           </button>
@@ -54,9 +54,9 @@ export function ShareRsvpButton({
             Enviar por WhatsApp
           </a>
           {url && (
-            <div className="flex flex-col items-center gap-1 border-t border-neutral-100 pt-2">
+            <div className="flex flex-col items-center gap-1 border-t border-neutral-100 dark:border-neutral-800 pt-2">
               <QRCodeSVG value={url} size={112} />
-              <span className="text-xs text-neutral-400">Código QR del enlace</span>
+              <span className="text-xs text-neutral-400 dark:text-neutral-500">Código QR del enlace</span>
             </div>
           )}
         </div>

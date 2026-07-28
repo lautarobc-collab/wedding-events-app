@@ -45,7 +45,7 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-3 rounded border border-neutral-200 p-4"
+      className="flex flex-col gap-3 rounded border border-neutral-200 dark:border-neutral-800 p-4"
     >
       <h2 className="font-medium">Nuevo invitado</h2>
       <div className="flex flex-wrap gap-2">
@@ -53,31 +53,31 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
           <label className="text-sm">Nombre</label>
           <input
             {...register("first_name")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           {errors.first_name && (
-            <p className="text-sm text-red-600">{errors.first_name.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{errors.first_name.message}</p>
           )}
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm">Apellidos</label>
           <input
             {...register("last_name")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm">Email</label>
           <input
             {...register("email")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm">Invitado por</label>
           <input
             {...register("invited_by")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
         </div>
       </div>
@@ -98,11 +98,11 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="self-start rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Añadiendo..." : "Añadir invitado"}
       </button>
-      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+      {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
     </form>
   );
 }

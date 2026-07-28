@@ -57,7 +57,7 @@ export function BudgetItemRow({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 dark:border-neutral-800 pt-2 text-sm">
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -68,7 +68,7 @@ export function BudgetItemRow({
           <span>
             {item.description}
             {linkedVendor && (
-              <span className="text-xs text-neutral-400"> · proveedor: {linkedVendor.name}</span>
+              <span className="text-xs text-neutral-400 dark:text-neutral-500"> · proveedor: {linkedVendor.name}</span>
             )}
           </span>
         }
@@ -77,26 +77,26 @@ export function BudgetItemRow({
           <input
             autoFocus
             {...register("description")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           <input
             type="number"
             step="1"
             placeholder="Estimado"
             {...register("estimated", { valueAsNumber: true })}
-            className="w-24 rounded border border-neutral-300 px-2 py-1"
+            className="w-24 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           <input
             type="number"
             step="1"
             placeholder="Real"
             {...register("actual", { valueAsNumber: true })}
-            className="w-24 rounded border border-neutral-300 px-2 py-1"
+            className="w-24 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           {vendors.length > 0 && (
             <select
               {...register("vendor_id")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             >
               <option value="">Sin proveedor</option>
               {vendors.map((vendor) => (
@@ -107,15 +107,15 @@ export function BudgetItemRow({
             </select>
           )}
           {errors.description && (
-            <p className="text-sm text-red-600">{errors.description.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
           )}
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>
       </InlineEditable>
 
       {!editing && (
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-neutral-500">
+          <span className="text-neutral-500 dark:text-neutral-400">
             {formatMoney(item.estimated)} est. / {formatMoney(item.actual)} real
           </span>
           <ConfirmDeleteButton

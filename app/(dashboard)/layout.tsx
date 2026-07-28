@@ -17,12 +17,12 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-4">
+      <header className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 px-6 py-4">
         <Link href="/" className="font-semibold">
           Coordina
         </Link>
         <form action={signOut}>
-          <button type="submit" className="text-sm text-neutral-600 underline">
+          <button type="submit" className="text-sm text-neutral-600 dark:text-neutral-400 underline">
             Cerrar sesión
           </button>
         </form>

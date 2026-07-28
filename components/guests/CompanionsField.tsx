@@ -14,20 +14,20 @@ export function CompanionsField({ control }: { control: Control<GuestFormValues>
         <button
           type="button"
           onClick={() => append({ name: "", is_child: false, dietary_restrictions: "" })}
-          className="text-sm text-neutral-600 underline"
+          className="text-sm text-neutral-600 dark:text-neutral-400 underline"
         >
           + Añadir acompañante
         </button>
       </div>
 
       {fields.length === 0 && (
-        <p className="text-sm text-neutral-400">Sin acompañantes.</p>
+        <p className="text-sm text-neutral-400 dark:text-neutral-500">Sin acompañantes.</p>
       )}
 
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="flex flex-col gap-2 rounded border border-neutral-200 p-2"
+          className="flex flex-col gap-2 rounded border border-neutral-200 dark:border-neutral-800 p-2"
         >
           <div className="flex flex-wrap items-center gap-2">
             <Controller
@@ -38,7 +38,7 @@ export function CompanionsField({ control }: { control: Control<GuestFormValues>
                   placeholder="Nombre (opcional)"
                   value={nameField.value ?? ""}
                   onChange={nameField.onChange}
-                  className="flex-1 rounded border border-neutral-300 px-2 py-1"
+                  className="flex-1 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
                 />
               )}
             />
@@ -59,7 +59,7 @@ export function CompanionsField({ control }: { control: Control<GuestFormValues>
             <button
               type="button"
               onClick={() => remove(index)}
-              className="text-sm text-red-600 underline"
+              className="text-sm text-red-600 dark:text-red-400 underline"
             >
               Quitar
             </button>

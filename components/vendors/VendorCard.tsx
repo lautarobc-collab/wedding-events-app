@@ -12,10 +12,10 @@ import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
 
 const STATUS_STYLES: Record<VendorStatus, string> = {
-  candidato: "bg-neutral-100 text-neutral-700",
-  contactado: "bg-blue-100 text-blue-700",
-  elegido: "bg-green-100 text-green-700",
-  descartado: "bg-red-100 text-red-700 line-through",
+  candidato: "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300",
+  contactado: "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300",
+  elegido: "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300",
+  descartado: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 line-through",
 };
 
 export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendor }) {
@@ -52,7 +52,7 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
   }
 
   return (
-    <div className="rounded border border-neutral-200 p-3 hover:border-neutral-300">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-3 hover:border-neutral-300 dark:hover:border-neutral-700">
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -70,7 +70,7 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
             </div>
 
             {(vendor.estimated != null || vendor.actual != null) && (
-              <p className="text-sm text-neutral-600">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {vendor.estimated != null ? `${formatMoney(vendor.estimated)} est.` : ""}
                 {vendor.estimated != null && vendor.actual != null ? " / " : ""}
                 {vendor.actual != null ? `${formatMoney(vendor.actual)} real` : ""}
@@ -78,18 +78,18 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
             )}
 
             {vendor.status === "elegido" && (
-              <p className="text-xs text-neutral-400">
+              <p className="text-xs text-neutral-400 dark:text-neutral-500">
                 Tiene una línea de gasto vinculada en Presupuesto.
               </p>
             )}
 
-            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
               {vendor.contact_phone && <span>Tel: {vendor.contact_phone}</span>}
               {vendor.contact_email && <span>{vendor.contact_email}</span>}
               {vendor.website && <span>{vendor.website}</span>}
             </div>
 
-            {vendor.notes && <p className="text-sm text-neutral-500">{vendor.notes}</p>}
+            {vendor.notes && <p className="text-sm text-neutral-500 dark:text-neutral-400">{vendor.notes}</p>}
           </div>
         }
       >
@@ -98,23 +98,23 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
             autoFocus
             placeholder="Nombre"
             {...register("name")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
-          {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+          {errors.name && <p className="text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
           <input
             placeholder="Teléfono"
             {...register("contact_phone")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           <input
             placeholder="Email"
             {...register("contact_email")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           <input
             placeholder="Web"
             {...register("website")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
           <div className="flex gap-2">
             <input
@@ -124,7 +124,7 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
               {...register("estimated", {
                 setValueAs: (v) => (v === "" ? undefined : Number(v)),
               })}
-              className="w-1/2 rounded border border-neutral-300 px-2 py-1"
+              className="w-1/2 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               type="number"
@@ -133,12 +133,12 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
               {...register("actual", {
                 setValueAs: (v) => (v === "" ? undefined : Number(v)),
               })}
-              className="w-1/2 rounded border border-neutral-300 px-2 py-1"
+              className="w-1/2 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
           <select
             {...register("status")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="candidato">Candidato</option>
             <option value="contactado">Contactado</option>
@@ -148,9 +148,9 @@ export function VendorCard({ eventId, vendor }: { eventId: string; vendor: Vendo
           <input
             placeholder="Notas"
             {...register("notes")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>
       </InlineEditable>
 

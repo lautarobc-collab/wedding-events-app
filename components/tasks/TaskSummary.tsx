@@ -13,20 +13,20 @@ export function TaskSummary({ tasks }: { tasks: Task[] }) {
 
   return (
     <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Tareas</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Tareas</dt>
         <dd className="font-medium">{tasks.length}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Sin empezar</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Sin empezar</dt>
         <dd className="font-medium">{counts.sin_empezar}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">En curso</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">En curso</dt>
         <dd className="font-medium">{counts.en_curso}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Completadas</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Completadas</dt>
         <dd className="font-medium">{counts.completado}</dd>
       </div>
     </dl>

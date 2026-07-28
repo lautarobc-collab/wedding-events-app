@@ -7,7 +7,7 @@ export function ConfirmDeleteButton({
   onConfirm,
   label = "Eliminar",
   pendingLabel = "Eliminando...",
-  className = "text-sm text-red-600 underline disabled:opacity-50",
+  className = "text-sm text-red-600 dark:text-red-400 underline disabled:opacity-50",
 }: {
   confirmMessage: string;
   onConfirm: () => unknown;

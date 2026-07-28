@@ -35,7 +35,7 @@ export function TaskLinkPicker({
             onKindChange(event.target.value as "" | TaskLinkKind);
             onRefIdChange("");
           }}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
         >
           <option value="">Nada</option>
           <option value="guest">Invitado</option>
@@ -50,7 +50,7 @@ export function TaskLinkPicker({
           <select
             value={refId}
             onChange={(event) => onRefIdChange(event.target.value)}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="">Elige uno</option>
             {guests.map((guest) => (
@@ -68,7 +68,7 @@ export function TaskLinkPicker({
           <select
             value={refId}
             onChange={(event) => onRefIdChange(event.target.value)}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="">Elige uno</option>
             {budgetItems.map((item) => (
@@ -91,7 +91,7 @@ export function TaskLinkPicker({
           <select
             value={refId}
             onChange={(event) => onRefIdChange(event.target.value)}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="">Elige una</option>
             {categories.map((category) => (

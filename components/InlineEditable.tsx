@@ -43,7 +43,7 @@ export function InlineEditable({
         onKeyDown={(event) => {
           if (event.key === "Enter") onStartEdit();
         }}
-        className={`cursor-text rounded px-1 -mx-1 hover:bg-neutral-100 ${className ?? ""}`}
+        className={`cursor-text rounded px-1 -mx-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${className ?? ""}`}
       >
         {display}
       </div>
@@ -53,7 +53,7 @@ export function InlineEditable({
   return (
     <div ref={containerRef} onBlur={handleBlur} onKeyDown={handleKeyDown} className={className}>
       {children}
-      <p className="text-xs text-neutral-400">Enter para guardar · Esc para cancelar</p>
+      <p className="text-xs text-neutral-400 dark:text-neutral-500">Enter para guardar · Esc para cancelar</p>
     </div>
   );
 }

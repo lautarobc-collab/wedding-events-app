@@ -34,10 +34,10 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           {...register("email")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
         {errors.email && (
-          <p className="text-sm text-red-600">{errors.email.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
         )}
       </div>
 
@@ -50,20 +50,20 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
           {...register("password")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
         {errors.password && (
-          <p className="text-sm text-red-600">{errors.password.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
         )}
       </div>
 
-      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
-      {message && <p className="text-sm text-green-700">{message}</p>}
+      {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
+      {message && <p className="text-sm text-green-700 dark:text-green-300">{message}</p>}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
       </button>

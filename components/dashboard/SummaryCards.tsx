@@ -15,11 +15,11 @@ function SummaryCard({
   return (
     <Link
       href={href}
-      className="rounded border border-neutral-200 p-4 transition-colors hover:border-neutral-400"
+      className="rounded border border-neutral-200 dark:border-neutral-800 p-4 transition-colors hover:border-neutral-400 dark:hover:border-neutral-600"
     >
-      <p className="text-sm text-neutral-500">{title}</p>
+      <p className="text-sm text-neutral-500 dark:text-neutral-400">{title}</p>
       <p className="mt-1 text-lg font-medium">{primary}</p>
-      <p className="text-sm text-neutral-500">{secondary}</p>
+      <p className="text-sm text-neutral-500 dark:text-neutral-400">{secondary}</p>
     </Link>
   );
 }

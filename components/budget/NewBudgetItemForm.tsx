@@ -46,17 +46,17 @@ export function NewBudgetItemForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-3 flex flex-wrap items-end gap-2 border-t border-neutral-100 pt-3"
+      className="mt-3 flex flex-wrap items-end gap-2 border-t border-neutral-100 dark:border-neutral-800 pt-3"
     >
       <div className="flex flex-col gap-1">
         <label className="text-sm">Nuevo gasto</label>
         <input
           placeholder="Descripción"
           {...register("description")}
-          className="rounded border border-neutral-300 px-2 py-1"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
         />
         {errors.description && (
-          <p className="text-sm text-red-600">{errors.description.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
         )}
       </div>
       <div className="flex flex-col gap-1">
@@ -65,7 +65,7 @@ export function NewBudgetItemForm({
           type="number"
           step="1"
           {...register("estimated", { valueAsNumber: true })}
-          className="w-28 rounded border border-neutral-300 px-2 py-1"
+          className="w-28 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
         />
       </div>
       <div className="flex flex-col gap-1">
@@ -74,7 +74,7 @@ export function NewBudgetItemForm({
           type="number"
           step="1"
           {...register("actual", { valueAsNumber: true })}
-          className="w-28 rounded border border-neutral-300 px-2 py-1"
+          className="w-28 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
         />
       </div>
       {vendors.length > 0 && (
@@ -82,7 +82,7 @@ export function NewBudgetItemForm({
           <label className="text-sm">Proveedor (opcional)</label>
           <select
             {...register("vendor_id")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="">Ninguno</option>
             {vendors.map((vendor) => (
@@ -96,11 +96,11 @@ export function NewBudgetItemForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+        className="rounded bg-neutral-900 dark:bg-neutral-100 px-3 py-1.5 text-sm text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Añadiendo..." : "Añadir"}
       </button>
-      {serverError && <p className="w-full text-sm text-red-600">{serverError}</p>}
+      {serverError && <p className="w-full text-sm text-red-600 dark:text-red-400">{serverError}</p>}
     </form>
   );
 }

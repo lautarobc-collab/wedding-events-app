@@ -177,7 +177,7 @@ export function QuickAddPanel({
   const showPreview = !needsCategory || Boolean(categoryId);
 
   return (
-    <div className="rounded border border-neutral-200 p-4">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
       <h2 className="mb-3 font-medium">Añadir rápido</h2>
 
       <div className="mb-1 flex flex-wrap gap-2">
@@ -191,18 +191,18 @@ export function QuickAddPanel({
             }}
             className={`rounded-full px-3 py-1 text-sm ${
               tab === t.key
-                ? "bg-neutral-900 text-white"
-                : "border border-neutral-300 text-neutral-700"
+                ? "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
+                : "border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
             }`}
           >
             {t.label}
           </button>
         ))}
       </div>
-      <p className="mb-3 text-sm text-neutral-500">{activeTab.subtitle}</p>
+      <p className="mb-3 text-sm text-neutral-500 dark:text-neutral-400">{activeTab.subtitle}</p>
 
       {needsCategory && categories.length === 0 ? (
-        <p className="text-sm text-neutral-400">
+        <p className="text-sm text-neutral-400 dark:text-neutral-500">
           Todavía no hay categorías — créalas primero en la pestaña Presupuesto.
         </p>
       ) : (
@@ -213,7 +213,7 @@ export function QuickAddPanel({
               <select
                 value={categoryId}
                 onChange={(event) => setCategoryId(event.target.value)}
-                className="rounded border border-neutral-300 px-2 py-1"
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -229,7 +229,7 @@ export function QuickAddPanel({
               autoFocus
               value={text}
               onChange={(event) => setText(event.target.value)}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
           {tab === "invitado" && (
@@ -240,7 +240,7 @@ export function QuickAddPanel({
                   placeholder="Opcional"
                   value={lastName}
                   onChange={(event) => setLastName(event.target.value)}
-                  className="rounded border border-neutral-300 px-2 py-1"
+                  className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -250,7 +250,7 @@ export function QuickAddPanel({
                   placeholder="Opcional"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="rounded border border-neutral-300 px-2 py-1"
+                  className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -259,7 +259,7 @@ export function QuickAddPanel({
                   placeholder="Opcional"
                   value={invitedBy}
                   onChange={(event) => setInvitedBy(event.target.value)}
-                  className="rounded border border-neutral-300 px-2 py-1"
+                  className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
                 />
               </div>
             </>
@@ -274,7 +274,7 @@ export function QuickAddPanel({
                 placeholder="0"
                 value={amount}
                 onChange={(event) => setAmount(event.target.value)}
-                className="w-28 rounded border border-neutral-300 px-2 py-1"
+                className="w-28 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
               />
             </div>
           )}
@@ -286,20 +286,20 @@ export function QuickAddPanel({
                 placeholder="Opcional"
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
-                className="w-36 rounded border border-neutral-300 px-2 py-1"
+                className="w-36 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
               />
             </div>
           )}
           <button
             type="submit"
             disabled={isSubmitting || !text.trim()}
-            className="rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+            className="rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
           >
             {isSubmitting ? "Añadiendo..." : "Añadir"}
           </button>
           {message && (
             <p
-              className={`w-full text-sm ${message.isError ? "text-red-600" : "text-neutral-600"}`}
+              className={`w-full text-sm ${message.isError ? "text-red-600 dark:text-red-400" : "text-neutral-600 dark:text-neutral-400"}`}
             >
               {message.text}
               {!message.isError && (
@@ -316,7 +316,7 @@ export function QuickAddPanel({
       )}
 
       {showPreview && (
-        <p className="mt-3 text-xs text-neutral-400">
+        <p className="mt-3 text-xs text-neutral-400 dark:text-neutral-500">
           {preview.items.length === 0
             ? preview.scoped && selectedCategory
               ? `Todavía no hay ${preview.labelPlural} en "${selectedCategory.name}".`

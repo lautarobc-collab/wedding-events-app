@@ -53,7 +53,7 @@ export function NewTaskForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-3 rounded border border-neutral-200 p-4"
+      className="flex flex-col gap-3 rounded border border-neutral-200 dark:border-neutral-800 p-4"
     >
       <h2 className="font-medium">Nueva tarea</h2>
       <div className="flex flex-wrap gap-2">
@@ -61,23 +61,23 @@ export function NewTaskForm({
           <label className="text-sm">Título</label>
           <input
             {...register("title")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
-          {errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
+          {errors.title && <p className="text-sm text-red-600 dark:text-red-400">{errors.title.message}</p>}
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm">Fecha límite</label>
           <input
             type="date"
             {...register("due_date")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm">Estado</label>
           <select
             {...register("status")}
-            className="rounded border border-neutral-300 px-2 py-1"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           >
             <option value="sin_empezar">Sin empezar</option>
             <option value="en_curso">En curso</option>
@@ -100,11 +100,11 @@ export function NewTaskForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="self-start rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Añadiendo..." : "Añadir tarea"}
       </button>
-      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+      {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
     </form>
   );
 }

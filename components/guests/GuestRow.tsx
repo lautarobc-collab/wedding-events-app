@@ -20,11 +20,11 @@ import { DietarySelect } from "@/components/DietarySelect";
 import { CompanionsField } from "./CompanionsField";
 
 const STATUS_STYLES: Record<GuestStatus, string> = {
-  por_decidir: "bg-neutral-100 text-neutral-700",
-  invitado: "bg-blue-100 text-blue-700",
-  si: "bg-green-100 text-green-700",
-  no: "bg-red-100 text-red-700",
-  quizas: "bg-amber-100 text-amber-700",
+  por_decidir: "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300",
+  invitado: "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300",
+  si: "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300",
+  no: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300",
+  quizas: "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300",
 };
 
 export function GuestRow({
@@ -100,7 +100,7 @@ export function GuestRow({
   const childrenCount = guest.guest_companions.filter((c) => c.is_child).length;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 rounded border border-neutral-200 px-4 py-3 text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded border border-neutral-200 dark:border-neutral-800 px-4 py-3 text-sm">
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -112,7 +112,7 @@ export function GuestRow({
             <p className="font-medium">
               {guest.first_name} {guest.last_name ?? ""}
             </p>
-            <p className="text-neutral-500">
+            <p className="text-neutral-500 dark:text-neutral-400">
               {guest.guest_companions.length > 0
                 ? `+${guest.guest_companions.length} acompañantes invitados`
                 : ""}
@@ -128,22 +128,22 @@ export function GuestRow({
               autoFocus
               placeholder="Nombre"
               {...register("first_name")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               placeholder="Apellidos"
               {...register("last_name")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               placeholder="Email"
               {...register("email")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               placeholder="Invitado por"
               {...register("invited_by")}
-              className="rounded border border-neutral-300 px-2 py-1"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
             <input
               type="number"
@@ -152,7 +152,7 @@ export function GuestRow({
               {...register("table_number", {
                 setValueAs: (v) => (v === "" ? undefined : Number(v)),
               })}
-              className="w-20 rounded border border-neutral-300 px-2 py-1"
+              className="w-20 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
 
@@ -170,15 +170,15 @@ export function GuestRow({
           <CompanionsField control={control} />
 
           {errors.first_name && (
-            <p className="text-sm text-red-600">{errors.first_name.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{errors.first_name.message}</p>
           )}
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>
       </InlineEditable>
 
       {!editing && (
         <div className="flex flex-wrap items-center justify-end gap-3">
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
           <select
             value={status}
             disabled={statusPending}

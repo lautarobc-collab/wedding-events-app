@@ -26,24 +26,24 @@ export function GuestSummary({
 
   return (
     <dl className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Invitados</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Invitados</dt>
         <dd className="font-medium">{guests.length}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Confirmados</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Confirmados</dt>
         <dd className="font-medium">{counts.si}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Personas confirmadas</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Personas confirmadas</dt>
         <dd className="font-medium">{confirmedPeople}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">No asisten</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">No asisten</dt>
         <dd className="font-medium">{counts.no}</dd>
       </div>
-      <div className="rounded border border-neutral-200 p-4">
-        <dt className="text-sm text-neutral-500">Sin responder</dt>
+      <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
+        <dt className="text-sm text-neutral-500 dark:text-neutral-400">Sin responder</dt>
         <dd className="font-medium">{counts.pendiente + counts.quizas}</dd>
       </div>
     </dl>

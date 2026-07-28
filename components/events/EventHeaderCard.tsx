@@ -57,7 +57,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
           : null;
 
   return (
-    <div className="rounded border border-neutral-200 p-4">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -68,20 +68,20 @@ export function EventHeaderCard({ event }: { event: Event }) {
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h1 className="text-xl font-semibold">{event.name}</h1>
               {countdownLabel && (
-                <span className="text-sm font-medium text-neutral-600">{countdownLabel}</span>
+                <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">{countdownLabel}</span>
               )}
             </div>
             <dl className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
               <div>
-                <dt className="text-sm text-neutral-500">Tipo</dt>
+                <dt className="text-sm text-neutral-500 dark:text-neutral-400">Tipo</dt>
                 <dd className="font-medium">{EVENT_TYPE_LABEL[event.event_type]}</dd>
               </div>
               <div>
-                <dt className="text-sm text-neutral-500">Fecha</dt>
+                <dt className="text-sm text-neutral-500 dark:text-neutral-400">Fecha</dt>
                 <dd className="font-medium">{event.event_date ?? "Sin definir"}</dd>
               </div>
               <div>
-                <dt className="text-sm text-neutral-500">Presupuesto</dt>
+                <dt className="text-sm text-neutral-500 dark:text-neutral-400">Presupuesto</dt>
                 <dd className="font-medium">
                   {event.total_budget != null ? formatMoney(event.total_budget) : "Sin definir"}
                 </dd>
@@ -99,9 +99,9 @@ export function EventHeaderCard({ event }: { event: Event }) {
               id="edit-name"
               autoFocus
               {...register("name")}
-              className="rounded border border-neutral-300 px-3 py-2"
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
             />
-            {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+            {errors.name && <p className="text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -112,7 +112,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
               <select
                 id="edit-event_type"
                 {...register("event_type")}
-                className="rounded border border-neutral-300 px-3 py-2"
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
               >
                 <option value="boda">Boda</option>
                 <option value="evento_generico">Evento genérico</option>
@@ -127,7 +127,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
                 id="edit-event_date"
                 type="date"
                 {...register("event_date")}
-                className="rounded border border-neutral-300 px-3 py-2"
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
               />
             </div>
 
@@ -142,15 +142,15 @@ export function EventHeaderCard({ event }: { event: Event }) {
                 {...register("total_budget", {
                   setValueAs: (v) => (v === "" ? undefined : Number(v)),
                 })}
-                className="rounded border border-neutral-300 px-3 py-2"
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
               />
               {errors.total_budget && (
-                <p className="text-sm text-red-600">{errors.total_budget.message}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.total_budget.message}</p>
               )}
             </div>
           </div>
 
-          {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>
       </InlineEditable>
     </div>

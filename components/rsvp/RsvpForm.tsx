@@ -60,7 +60,7 @@ export function RsvpForm({
 
   if (submitted) {
     return (
-      <p className="rounded border border-neutral-200 p-4 text-sm">
+      <p className="rounded border border-neutral-200 dark:border-neutral-800 p-4 text-sm">
         ¡Gracias! Tu respuesta se guardó correctamente.
       </p>
     );
@@ -72,7 +72,7 @@ export function RsvpForm({
         <label className="text-sm font-medium">¿Asistirás?</label>
         <select
           {...register("attending")}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         >
           <option value="" disabled>
             Elige una opción
@@ -82,7 +82,7 @@ export function RsvpForm({
           <option value="quizas">Todavía no lo sé</option>
         </select>
         {errors.attending && (
-          <p className="text-sm text-red-600">{errors.attending.message}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{errors.attending.message}</p>
         )}
       </div>
 
@@ -96,7 +96,7 @@ export function RsvpForm({
             min={0}
             max={invite.invited_plus_ones}
             {...register("confirmed_plus_ones", { valueAsNumber: true })}
-            className="rounded border border-neutral-300 px-3 py-2"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
           />
         </div>
       )}
@@ -111,10 +111,10 @@ export function RsvpForm({
             min={0}
             max={invite.invited_children}
             {...register("confirmed_children", { valueAsNumber: true })}
-            className="rounded border border-neutral-300 px-3 py-2"
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
           />
           {errors.confirmed_children && (
-            <p className="text-sm text-red-600">{errors.confirmed_children.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{errors.confirmed_children.message}</p>
           )}
         </div>
       )}
@@ -139,16 +139,16 @@ export function RsvpForm({
         <textarea
           {...register("message")}
           rows={3}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
         />
       </div>
 
-      {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+      {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="rounded bg-neutral-900 dark:bg-neutral-100 px-4 py-2 text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Enviando..." : "Confirmar respuesta"}
       </button>

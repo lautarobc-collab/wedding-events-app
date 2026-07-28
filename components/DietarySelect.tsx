@@ -52,8 +52,8 @@ export function DietarySelect({
               key={option}
               className={`cursor-pointer rounded-full border px-3 py-1 text-sm ${
                 active
-                  ? "border-neutral-900 bg-neutral-900 text-white"
-                  : "border-neutral-300 text-neutral-700"
+                  ? "border-neutral-900 dark:border-neutral-100 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
+                  : "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
               }`}
             >
               <input
@@ -71,7 +71,7 @@ export function DietarySelect({
         placeholder="Otro (especifica)"
         value={parsed.other}
         onChange={(event) => handleOtherChange(event.target.value)}
-        className="rounded border border-neutral-300 px-2 py-1 text-sm"
+        className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1 text-sm"
       />
     </div>
   );

@@ -31,7 +31,7 @@ export default async function VendorsPage({
       <h1 className="text-xl font-semibold">Proveedores</h1>
 
       {categories.length === 0 ? (
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Todavía no hay categorías. Crea alguna en la pestaña Presupuesto.
         </p>
       ) : (
@@ -48,7 +48,7 @@ export default async function VendorsPage({
           />
         ))}
         {categories.length > 0 && !hasVendors && (
-          <p className="text-sm text-neutral-400">Todavía no añadiste ningún proveedor.</p>
+          <p className="text-sm text-neutral-400 dark:text-neutral-500">Todavía no añadiste ningún proveedor.</p>
         )}
       </div>
     </div>

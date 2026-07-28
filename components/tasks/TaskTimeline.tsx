@@ -20,14 +20,14 @@ export function TaskTimeline({
   const groups = groupTasksByMonth(tasks);
 
   if (groups.length === 0) {
-    return <p className="text-sm text-neutral-500">Todavía no añadiste tareas.</p>;
+    return <p className="text-sm text-neutral-500 dark:text-neutral-400">Todavía no añadiste tareas.</p>;
   }
 
   return (
     <div className="flex flex-col gap-6">
       {groups.map((group) => (
         <div key={group.key}>
-          <h3 className="mb-2 text-sm font-medium capitalize text-neutral-500">
+          <h3 className="mb-2 text-sm font-medium capitalize text-neutral-500 dark:text-neutral-400">
             {group.label}
           </h3>
           <div className="flex flex-col gap-2">

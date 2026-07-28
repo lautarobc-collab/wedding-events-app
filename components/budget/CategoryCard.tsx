@@ -53,7 +53,7 @@ export function CategoryCard({
   }
 
   return (
-    <div className="rounded border border-neutral-200 p-4">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex-1">
           <InlineEditable
@@ -67,13 +67,13 @@ export function CategoryCard({
               <input
                 autoFocus
                 {...register("name")}
-                className="rounded border border-neutral-300 px-2 py-1 font-medium"
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1 font-medium"
               />
-              {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
-              {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+              {errors.name && <p className="text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+              {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
             </form>
           </InlineEditable>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Estimado: {formatMoney(estimated)} · Gastado: {formatMoney(actual)}
           </p>
         </div>
@@ -91,13 +91,13 @@ export function CategoryCard({
         {chosenVendors.map((vendor) => (
           <div
             key={vendor.id}
-            className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-sm"
+            className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-100 dark:border-neutral-800 pt-2 text-sm"
           >
             <span>
               {vendor.name}{" "}
-              <span className="text-xs text-neutral-400">(proveedor elegido)</span>
+              <span className="text-xs text-neutral-400 dark:text-neutral-500">(proveedor elegido)</span>
             </span>
-            <span className="text-neutral-500">
+            <span className="text-neutral-500 dark:text-neutral-400">
               {formatMoney(vendor.estimated ?? 0)} est. / {formatMoney(vendor.actual ?? 0)} real
             </span>
           </div>
@@ -108,7 +108,7 @@ export function CategoryCard({
         ))}
 
         {items.length === 0 && chosenVendors.length === 0 && (
-          <p className="text-sm text-neutral-400">Sin gastos todavía.</p>
+          <p className="text-sm text-neutral-400 dark:text-neutral-500">Sin gastos todavía.</p>
         )}
       </div>
 

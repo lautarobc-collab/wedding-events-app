@@ -39,14 +39,14 @@ export default async function RsvpPage({
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-8">
       <div>
         <h1 className="text-xl font-semibold">{invite.event_name}</h1>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
           Hola {invite.first_name}, confírmanos tu asistencia
           {invite.event_date ? ` para el ${invite.event_date}` : ""}.
         </p>
       </div>
       <RsvpForm slug={slug} guestId={guestId} invite={invite} />
 
-      <p className="text-xs text-neutral-400">
+      <p className="text-xs text-neutral-400 dark:text-neutral-500">
         Estos datos (tu respuesta, acompañantes y restricciones alimentarias) los ve
         únicamente quien organiza este evento, para preparar mesas y catering. No se
         comparten con nadie más ni se usan con otro fin.

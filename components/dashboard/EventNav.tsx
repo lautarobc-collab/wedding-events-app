@@ -25,7 +25,7 @@ export function EventNav({
     <nav className="flex flex-col gap-1 sm:w-48 sm:shrink-0">
       <Link
         href="/"
-        className="mb-2 text-sm text-neutral-500 underline sm:mb-4"
+        className="mb-2 text-sm text-neutral-500 dark:text-neutral-400 underline sm:mb-4"
       >
         ← Tus eventos
       </Link>
@@ -40,8 +40,8 @@ export function EventNav({
               href={href}
               className={`shrink-0 rounded px-3 py-2 text-sm ${
                 isActive
-                  ? "bg-neutral-900 text-white"
-                  : "text-neutral-700 hover:bg-neutral-100"
+                  ? "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900"
+                  : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
               }`}
             >
               {tab.label}

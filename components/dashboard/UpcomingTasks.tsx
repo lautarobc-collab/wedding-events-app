@@ -18,16 +18,16 @@ export function UpcomingTasks({ eventId, tasks }: { eventId: string; tasks: Task
     .slice(0, 5);
 
   return (
-    <div className="rounded border border-neutral-200 p-4">
+    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-4">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="font-medium">Próximas tareas</h2>
-        <Link href={`/eventos/${eventId}/tareas`} className="text-sm text-neutral-600 underline">
+        <Link href={`/eventos/${eventId}/tareas`} className="text-sm text-neutral-600 dark:text-neutral-400 underline">
           Ver todas
         </Link>
       </div>
 
       {upcoming.length === 0 ? (
-        <p className="text-sm text-neutral-400">No tienes tareas pendientes.</p>
+        <p className="text-sm text-neutral-400 dark:text-neutral-500">No tienes tareas pendientes.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {upcoming.map((task) => {
@@ -35,7 +35,7 @@ export function UpcomingTasks({ eventId, tasks }: { eventId: string; tasks: Task
             return (
               <li key={task.id} className="flex items-center justify-between gap-2 text-sm">
                 <span>{task.title}</span>
-                <span className={overdue ? "font-medium text-red-600" : "text-neutral-500"}>
+                <span className={overdue ? "font-medium text-red-600 dark:text-red-400" : "text-neutral-500 dark:text-neutral-400"}>
                   {task.due_date ?? "Sin fecha"}
                   {overdue ? " · atrasada" : ""}
                 </span>
