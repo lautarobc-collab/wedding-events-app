@@ -103,6 +103,7 @@ export function QuickAddPanel({
           due_date: "",
           status: "sin_empezar",
           notes: "",
+          recurrence: "none",
         });
         break;
       case "invitado":

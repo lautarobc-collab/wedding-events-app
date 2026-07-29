@@ -88,6 +88,14 @@ export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
   completado: "Completado",
 };
 
+export type TaskRecurrence = "none" | "weekly" | "monthly";
+
+export const TASK_RECURRENCE_LABEL: Record<TaskRecurrence, string> = {
+  none: "No se repite",
+  weekly: "Cada semana",
+  monthly: "Cada mes",
+};
+
 export type Task = {
   id: string;
   event_id: string;
@@ -99,6 +107,7 @@ export type Task = {
   budget_item_id: string | null;
   vendor_id: string | null;
   category_id: string | null;
+  recurrence: TaskRecurrence;
 };
 
 export type VendorStatus = "candidato" | "contactado" | "elegido" | "descartado";

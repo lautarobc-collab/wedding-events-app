@@ -34,7 +34,7 @@ export function NewTaskForm({
     formState: { errors, isSubmitting },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
-    defaultValues: { status: "sin_empezar" },
+    defaultValues: { status: "sin_empezar", recurrence: "none" },
   });
 
   async function onSubmit(values: TaskFormValues) {
@@ -44,7 +44,7 @@ export function NewTaskForm({
       setServerError(result.error);
       return;
     }
-    reset({ title: "", due_date: "", status: "sin_empezar", notes: "" });
+    reset({ title: "", due_date: "", status: "sin_empezar", notes: "", recurrence: "none" });
     setLinkKind("");
     setLinkRefId("");
     router.refresh();
@@ -82,6 +82,17 @@ export function NewTaskForm({
             <option value="sin_empezar">Sin empezar</option>
             <option value="en_curso">En curso</option>
             <option value="completado">Completado</option>
+          </select>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Repetir</label>
+          <select
+            {...register("recurrence")}
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+          >
+            <option value="none">No se repite</option>
+            <option value="weekly">Cada semana</option>
+            <option value="monthly">Cada mes</option>
           </select>
         </div>
       </div>

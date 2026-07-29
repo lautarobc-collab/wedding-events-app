@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { taskSchema, type TaskFormValues } from "@/lib/validations/task";
 import type { TaskLinkColumns } from "@/lib/taskLinks";
+import { nextDueDate } from "@/lib/taskRecurrence";
 
 const noLink: TaskLinkColumns = {
   guest_id: null,
@@ -20,7 +21,7 @@ export async function createTask(
   const parsed = taskSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { title, due_date, status, notes } = parsed.data;
+  const { title, due_date, status, notes, recurrence } = parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase.from("tasks").insert({
@@ -29,6 +30,7 @@ export async function createTask(
     due_date: due_date || null,
     status,
     notes: notes || null,
+    recurrence,
     ...link,
   });
 
@@ -48,9 +50,15 @@ export async function updateTask(
   const parsed = taskSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { title, due_date, status, notes } = parsed.data;
+  const { title, due_date, status, notes, recurrence } = parsed.data;
 
   const supabase = await createClient();
+  const { data: previous } = await supabase
+    .from("tasks")
+    .select("status")
+    .eq("id", taskId)
+    .single();
+
   const { error } = await supabase
     .from("tasks")
     .update({
@@ -58,11 +66,26 @@ export async function updateTask(
       due_date: due_date || null,
       status,
       notes: notes || null,
+      recurrence,
       ...link,
     })
     .eq("id", taskId);
 
   if (error) return { error: error.message };
+
+  const justCompleted = status === "completado" && previous?.status !== "completado";
+  if (justCompleted && recurrence !== "none") {
+    const { error: nextError } = await supabase.from("tasks").insert({
+      event_id: eventId,
+      title,
+      due_date: nextDueDate(due_date, recurrence),
+      status: "sin_empezar",
+      notes: notes || null,
+      recurrence,
+      ...link,
+    });
+    if (nextError) return { error: nextError.message };
+  }
 
   revalidatePath(`/eventos/${eventId}/tareas`);
   revalidatePath(`/eventos/${eventId}`);

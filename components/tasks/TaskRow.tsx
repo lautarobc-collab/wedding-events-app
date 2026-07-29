@@ -6,7 +6,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteTask, updateTask } from "@/app/(dashboard)/eventos/[id]/tareas/actions";
-import { TASK_STATUS_LABEL, type BudgetItem, type Category, type Guest, type Task, type Vendor } from "@/lib/types";
+import {
+  TASK_RECURRENCE_LABEL,
+  TASK_STATUS_LABEL,
+  type BudgetItem,
+  type Category,
+  type Guest,
+  type Task,
+  type Vendor,
+} from "@/lib/types";
 import { taskSchema, type TaskFormValues } from "@/lib/validations/task";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
@@ -45,6 +53,7 @@ export function TaskRow({
       due_date: task.due_date ?? "",
       status: task.status,
       notes: task.notes ?? "",
+      recurrence: task.recurrence,
     },
   });
 
@@ -86,6 +95,7 @@ export function TaskRow({
               {TASK_STATUS_LABEL[task.status]}
               {task.due_date ? ` · Vence ${task.due_date}` : ""}
               {overdue ? " · Vencida" : ""}
+              {task.recurrence !== "none" ? ` · ${TASK_RECURRENCE_LABEL[task.recurrence]}` : ""}
             </p>
             {link && (
               <Link
@@ -119,6 +129,14 @@ export function TaskRow({
               <option value="sin_empezar">Sin empezar</option>
               <option value="en_curso">En curso</option>
               <option value="completado">Completado</option>
+            </select>
+            <select
+              {...register("recurrence")}
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+            >
+              <option value="none">No se repite</option>
+              <option value="weekly">Cada semana</option>
+              <option value="monthly">Cada mes</option>
             </select>
             <input
               placeholder="Notas"

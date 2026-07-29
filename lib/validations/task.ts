@@ -5,6 +5,7 @@ export const taskSchema = z.object({
   due_date: z.string().optional(),
   status: z.enum(["sin_empezar", "en_curso", "completado"]),
   notes: z.string().trim().max(500).optional(),
+  recurrence: z.enum(["none", "weekly", "monthly"]),
 });
 
 export type TaskFormValues = z.infer<typeof taskSchema>;
