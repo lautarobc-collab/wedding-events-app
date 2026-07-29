@@ -180,7 +180,11 @@ export function VendorCard({
       {!editing && (
         <div className="mt-2 flex flex-col gap-2">
           <ConfirmDeleteButton
-            confirmMessage={`¿Eliminar a "${vendor.name}"?`}
+            confirmMessage={
+              vendor.status === "elegido"
+                ? `¿Eliminar a "${vendor.name}"? Tiene un gasto vinculado en Presupuesto que se mantendrá, pero sin proveedor asociado.`
+                : `¿Eliminar a "${vendor.name}"?`
+            }
             onConfirm={async () => {
               await deleteVendor(vendor.id, eventId);
               router.refresh();

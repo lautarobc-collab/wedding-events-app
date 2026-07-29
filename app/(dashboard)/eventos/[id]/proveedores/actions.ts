@@ -97,6 +97,14 @@ export async function updateVendor(
     parsed.data;
 
   const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("vendors")
+    .select("status")
+    .eq("id", vendorId)
+    .maybeSingle();
+  const wasElegido = before?.status === "elegido";
+
   const { data: vendor, error } = await supabase
     .from("vendors")
     .update({
@@ -126,6 +134,15 @@ export async function updateVendor(
       actual,
     );
     if (linkError) return { error: linkError.message };
+  } else if (wasElegido) {
+    // Deja de estar "elegido": el gasto vinculado se conserva (no se borra
+    // dinero sin que lo pidan explícitamente), solo pierde la referencia
+    // al proveedor y pasa a ser una línea manual.
+    const { error: unlinkError } = await supabase
+      .from("budget_items")
+      .update({ vendor_id: null })
+      .eq("vendor_id", vendorId);
+    if (unlinkError) return { error: unlinkError.message };
   }
 
   revalidatePath(`/eventos/${eventId}/proveedores`);

@@ -125,7 +125,11 @@ export function BudgetItemRow({
             {formatMoney(item.estimated)} est. / {formatMoney(item.actual)} real
           </span>
           <ConfirmDeleteButton
-            confirmMessage={`¿Eliminar "${item.description}"?`}
+            confirmMessage={
+              linkedVendor?.status === "elegido"
+                ? `¿Eliminar "${item.description}"? Está vinculado al proveedor "${linkedVendor.name}" (elegido); si lo eliminas, el proveedor pasará a "Contactado".`
+                : `¿Eliminar "${item.description}"?`
+            }
             onConfirm={async () => {
               await deleteBudgetItem(item.id, eventId);
               router.refresh();
