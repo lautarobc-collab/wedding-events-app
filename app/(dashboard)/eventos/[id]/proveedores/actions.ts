@@ -48,37 +48,25 @@ export async function createVendor(
     parsed.data;
 
   const supabase = await createClient();
-  const { data: vendor, error } = await supabase
-    .from("vendors")
-    .insert({
-      category_id: categoryId,
-      name,
-      contact_phone: contact_phone || null,
-      contact_email: contact_email || null,
-      website: website || null,
-      estimated: estimated ?? null,
-      actual: actual ?? null,
-      status,
-      notes: notes || null,
-      rating: rating ?? null,
-    })
-    .select("id")
-    .single();
+  const { error } = await supabase.from("vendors").insert({
+    category_id: categoryId,
+    name,
+    contact_phone: contact_phone || null,
+    contact_email: contact_email || null,
+    website: website || null,
+    estimated: estimated ?? null,
+    actual: actual ?? null,
+    status,
+    notes: notes || null,
+    rating: rating ?? null,
+  });
 
   if (error) return { error: error.message };
 
-  if (status === "elegido") {
-    const linkError = await ensureLinkedBudgetItem(
-      supabase,
-      vendor.id,
-      categoryId,
-      name,
-      estimated,
-      actual,
-    );
-    if (linkError) return { error: linkError.message };
-  }
-
+  // A propósito, aquí NO se crea el gasto vinculado aunque el estado ya sea
+  // "elegido" — eso solo pasa al editar la ficha después (ver updateVendor),
+  // para no generar una línea en Presupuesto antes de que el usuario termine
+  // de crear el proveedor.
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}/presupuesto`);
   revalidatePath(`/eventos/${eventId}`);
