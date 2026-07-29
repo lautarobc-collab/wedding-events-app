@@ -9,16 +9,21 @@ import {
   budgetItemSchema,
   type BudgetItemFormValues,
 } from "@/lib/validations/budgetItem";
+import { getBudgetItemSuggestions } from "@/lib/budgetItemSuggestions";
 import type { Vendor } from "@/lib/types";
 
 export function NewBudgetItemForm({
   eventId,
   categoryId,
+  categoryName,
   vendors,
+  categoryNameById,
 }: {
   eventId: string;
   categoryId: string;
+  categoryName: string;
   vendors: Vendor[];
+  categoryNameById: Map<string, string>;
 }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -26,11 +31,14 @@ export function NewBudgetItemForm({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<BudgetItemFormValues>({
     resolver: zodResolver(budgetItemSchema),
     defaultValues: { estimated: 0, actual: 0, vendor_id: "", expense_date: "" },
   });
+
+  const suggestions = getBudgetItemSuggestions(categoryName);
 
   async function onSubmit(values: BudgetItemFormValues) {
     setServerError(null);
@@ -55,6 +63,20 @@ export function NewBudgetItemForm({
           {...register("description")}
           className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
         />
+        {suggestions.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {suggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => setValue("description", suggestion, { shouldValidate: true })}
+                className="rounded-full border border-neutral-300 dark:border-neutral-700 px-2 py-0.5 text-xs text-neutral-600 dark:text-neutral-400 hover:border-neutral-900 dark:hover:border-neutral-100"
+              >
+                + {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
         {errors.description && (
           <p className="text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
         )}
@@ -88,6 +110,9 @@ export function NewBudgetItemForm({
             {vendors.map((vendor) => (
               <option key={vendor.id} value={vendor.id}>
                 {vendor.name}
+                {vendor.category_id !== categoryId
+                  ? ` — ${categoryNameById.get(vendor.category_id) ?? ""}`
+                  : ""}
               </option>
             ))}
           </select>

@@ -33,8 +33,8 @@ export function BudgetView({
     ? categories.filter((category) => category.id === selectedCategoryId)
     : categories;
 
-  const categoryName = (categoryId: string) =>
-    categories.find((c) => c.id === categoryId)?.name ?? "";
+  const categoryNameById = new Map(categories.map((c) => [c.id, c.name]));
+  const categoryName = (categoryId: string) => categoryNameById.get(categoryId) ?? "";
 
   type ExportRow = {
     category: string;
@@ -94,10 +94,11 @@ export function BudgetView({
             eventId={eventId}
             category={category}
             items={items.filter((item) => item.category_id === category.id)}
-            vendors={vendors.filter((vendor) => vendor.category_id === category.id)}
+            vendors={vendors}
             chosenVendors={chosenVendors.filter(
               (vendor) => vendor.category_id === category.id,
             )}
+            categoryNameById={categoryNameById}
           />
         ))}
       </div>

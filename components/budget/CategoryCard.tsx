@@ -20,12 +20,14 @@ export function CategoryCard({
   items,
   vendors,
   chosenVendors,
+  categoryNameById,
 }: {
   eventId: string;
   category: Category;
   items: BudgetItem[];
   vendors: Vendor[];
   chosenVendors: Vendor[];
+  categoryNameById: Map<string, string>;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -117,7 +119,13 @@ export function CategoryCard({
         ))}
 
         {items.map((item) => (
-          <BudgetItemRow key={item.id} eventId={eventId} item={item} vendors={vendors} />
+          <BudgetItemRow
+            key={item.id}
+            eventId={eventId}
+            item={item}
+            vendors={vendors}
+            categoryNameById={categoryNameById}
+          />
         ))}
 
         {items.length === 0 && chosenVendors.length === 0 && (
@@ -125,7 +133,13 @@ export function CategoryCard({
         )}
       </div>
 
-      <NewBudgetItemForm eventId={eventId} categoryId={category.id} vendors={vendors} />
+      <NewBudgetItemForm
+        eventId={eventId}
+        categoryId={category.id}
+        categoryName={category.name}
+        vendors={vendors}
+        categoryNameById={categoryNameById}
+      />
     </div>
   );
 }

@@ -21,10 +21,12 @@ export function BudgetItemRow({
   eventId,
   item,
   vendors,
+  categoryNameById,
 }: {
   eventId: string;
   item: BudgetItem;
   vendors: Vendor[];
+  categoryNameById: Map<string, string>;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -69,7 +71,13 @@ export function BudgetItemRow({
           <span>
             {item.description}
             {linkedVendor && (
-              <span className="text-xs text-neutral-400 dark:text-neutral-500"> · proveedor: {linkedVendor.name}</span>
+              <span className="text-xs text-neutral-400 dark:text-neutral-500">
+                {" "}
+                · proveedor: {linkedVendor.name}
+                {linkedVendor.category_id !== item.category_id
+                  ? ` (${categoryNameById.get(linkedVendor.category_id) ?? ""})`
+                  : ""}
+              </span>
             )}
           </span>
         }
@@ -103,6 +111,9 @@ export function BudgetItemRow({
               {vendors.map((vendor) => (
                 <option key={vendor.id} value={vendor.id}>
                   {vendor.name}
+                  {vendor.category_id !== item.category_id
+                    ? ` — ${categoryNameById.get(vendor.category_id) ?? ""}`
+                    : ""}
                 </option>
               ))}
             </select>
