@@ -5,6 +5,7 @@ export const eventSchema = z.object({
   event_type: z.enum(["boda", "evento_generico"]),
   event_date: z.string().optional(),
   location: z.string().trim().max(200).optional(),
+  rsvp_deadline: z.string().optional(),
   total_budget: z
     .number({ error: "Tiene que ser un número" })
     .nonnegative("No puede ser negativo")

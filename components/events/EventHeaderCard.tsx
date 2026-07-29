@@ -32,6 +32,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
       event_type: event.event_type,
       event_date: event.event_date ?? "",
       location: event.location ?? "",
+      rsvp_deadline: event.rsvp_deadline ?? "",
       total_budget: event.total_budget ?? undefined,
     },
   });
@@ -90,6 +91,10 @@ export function EventHeaderCard({ event }: { event: Event }) {
               <div>
                 <dt className="text-sm text-neutral-500 dark:text-neutral-400">Ubicación</dt>
                 <dd className="font-medium">{event.location ?? "Sin definir"}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-neutral-500 dark:text-neutral-400">Fecha límite RSVP</dt>
+                <dd className="font-medium">{event.rsvp_deadline ?? "Sin definir"}</dd>
               </div>
             </dl>
           </div>
@@ -162,6 +167,18 @@ export function EventHeaderCard({ event }: { event: Event }) {
                 id="edit-location"
                 placeholder="Opcional"
                 {...register("location")}
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="edit-rsvp_deadline" className="text-sm font-medium">
+                Fecha límite RSVP
+              </label>
+              <input
+                id="edit-rsvp_deadline"
+                type="date"
+                {...register("rsvp_deadline")}
                 className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
               />
             </div>

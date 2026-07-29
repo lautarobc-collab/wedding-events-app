@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteVendor, updateVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
 import { formatMoney } from "@/lib/format";
@@ -11,6 +11,7 @@ import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
 import { InlineEditable } from "@/components/InlineEditable";
 import { VendorAttachments } from "./VendorAttachments";
+import { StarRatingDisplay, StarRatingInput } from "./StarRating";
 
 const STATUS_STYLES: Record<VendorStatus, string> = {
   candidato: "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300",
@@ -36,6 +37,7 @@ export function VendorCard({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<VendorFormValues>({
     resolver: zodResolver(vendorSchema),
@@ -48,6 +50,7 @@ export function VendorCard({
       actual: vendor.actual ?? undefined,
       status: vendor.status,
       notes: vendor.notes ?? "",
+      rating: vendor.rating ?? undefined,
     },
   });
 
@@ -79,6 +82,8 @@ export function VendorCard({
                 {VENDOR_STATUS_LABEL[vendor.status]}
               </span>
             </div>
+
+            <StarRatingDisplay rating={vendor.rating} />
 
             {(vendor.estimated != null || vendor.actual != null) && (
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -160,6 +165,13 @@ export function VendorCard({
             placeholder="Notas"
             {...register("notes")}
             className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+          />
+          <Controller
+            name="rating"
+            control={control}
+            render={({ field }) => (
+              <StarRatingInput value={field.value} onChange={field.onChange} />
+            )}
           />
           {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
         </form>

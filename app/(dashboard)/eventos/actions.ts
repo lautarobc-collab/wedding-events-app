@@ -52,7 +52,7 @@ export async function updateEvent(eventId: string, values: EventFormValues) {
   if (!parsed.success) return { error: "Datos inválidos." };
 
   const supabase = await createClient();
-  const { name, event_type, event_date, location, total_budget } = parsed.data;
+  const { name, event_type, event_date, location, rsvp_deadline, total_budget } = parsed.data;
 
   const { error } = await supabase
     .from("events")
@@ -61,6 +61,7 @@ export async function updateEvent(eventId: string, values: EventFormValues) {
       event_type,
       event_date: event_date || null,
       location: location || null,
+      rsvp_deadline: rsvp_deadline || null,
       total_budget: total_budget ?? null,
     })
     .eq("id", eventId);

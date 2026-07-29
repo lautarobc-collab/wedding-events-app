@@ -8,6 +8,7 @@ type RsvpInvite = {
   event_id: string;
   event_name: string;
   event_date: string | null;
+  rsvp_deadline: string | null;
   guest_id: string;
   first_name: string;
   last_name: string | null;
@@ -44,6 +45,11 @@ export default async function RsvpPage({
           Hola {invite.first_name}, confírmanos tu asistencia
           {invite.event_date ? ` para el ${invite.event_date}` : ""}.
         </p>
+        {invite.rsvp_deadline && (
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            Por favor, responde antes del {invite.rsvp_deadline}.
+          </p>
+        )}
         <Link href={`/evento/${slug}`} className="text-sm underline">
           Ver información del evento
         </Link>

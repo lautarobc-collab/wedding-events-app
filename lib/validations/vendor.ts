@@ -15,6 +15,7 @@ export const vendorSchema = z.object({
     .optional(),
   status: z.enum(["candidato", "contactado", "elegido", "descartado"]),
   notes: z.string().trim().max(500).optional(),
+  rating: z.number().int().min(1).max(5).optional(),
 });
 
 export type VendorFormValues = z.infer<typeof vendorSchema>;

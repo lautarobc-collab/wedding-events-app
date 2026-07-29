@@ -44,7 +44,7 @@ export async function createVendor(
   const parsed = vendorSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { name, contact_phone, contact_email, website, estimated, actual, status, notes } =
+  const { name, contact_phone, contact_email, website, estimated, actual, status, notes, rating } =
     parsed.data;
 
   const supabase = await createClient();
@@ -60,6 +60,7 @@ export async function createVendor(
       actual: actual ?? null,
       status,
       notes: notes || null,
+      rating: rating ?? null,
     })
     .select("id")
     .single();
@@ -92,7 +93,7 @@ export async function updateVendor(
   const parsed = vendorSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { name, contact_phone, contact_email, website, estimated, actual, status, notes } =
+  const { name, contact_phone, contact_email, website, estimated, actual, status, notes, rating } =
     parsed.data;
 
   const supabase = await createClient();
@@ -107,6 +108,7 @@ export async function updateVendor(
       actual: actual ?? null,
       status,
       notes: notes || null,
+      rating: rating ?? null,
     })
     .eq("id", vendorId)
     .select("category_id")

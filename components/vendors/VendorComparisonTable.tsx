@@ -3,6 +3,7 @@ import { VENDOR_STATUS_LABEL, type Vendor } from "@/lib/types";
 
 const ROWS: { label: string; render: (vendor: Vendor) => string }[] = [
   { label: "Estado", render: (v) => VENDOR_STATUS_LABEL[v.status] },
+  { label: "Valoración", render: (v) => (v.rating ? `${"★".repeat(v.rating)} (${v.rating}/5)` : "—") },
   { label: "Estimado", render: (v) => (v.estimated != null ? formatMoney(v.estimated) : "—") },
   { label: "Real", render: (v) => (v.actual != null ? formatMoney(v.actual) : "—") },
   { label: "Teléfono", render: (v) => v.contact_phone ?? "—" },

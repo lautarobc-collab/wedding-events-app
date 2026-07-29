@@ -12,6 +12,7 @@ export type Event = {
   event_type: EventType;
   event_date: string | null;
   location: string | null;
+  rsvp_deadline: string | null;
   total_budget: number | null;
   public_slug: string | null;
   created_at: string;
@@ -140,6 +141,7 @@ export type Vendor = {
   actual: number | null;
   status: VendorStatus;
   notes: string | null;
+  rating: number | null;
 };
 
 export type VendorAttachment = {
