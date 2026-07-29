@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
+import { giftSchema, type GiftFormValues } from "@/lib/validations/gift";
 import { parseGuestCsv } from "@/lib/importGuests";
 import type { AttendingStatus, InvitationStatus } from "@/lib/types";
 
@@ -156,6 +157,26 @@ export async function toggleThankYouSent(
     .eq("id", guestId);
   if (error) return { error: error.message };
   revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}/regalos`);
+}
+
+export async function updateGiftDescription(
+  guestId: string,
+  eventId: string,
+  values: GiftFormValues,
+) {
+  const parsed = giftSchema.safeParse(values);
+  if (!parsed.success) return { error: "Datos inválidos." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("guests")
+    .update({ gift_description: parsed.data.gift_description || null })
+    .eq("id", guestId);
+  if (error) return { error: error.message };
+  revalidatePath(`/eventos/${eventId}/invitados`);
+  revalidatePath(`/eventos/${eventId}/regalos`);
+  return { success: true };
 }
 
 export async function setInvitationStatus(

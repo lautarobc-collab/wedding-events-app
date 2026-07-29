@@ -10,6 +10,7 @@ const TABS = [
   { href: "/mesas", label: "Mesas" },
   { href: "/tareas", label: "Tareas" },
   { href: "/proveedores", label: "Proveedores" },
+  { href: "/regalos", label: "Regalos" },
 ];
 
 export function EventNav({
