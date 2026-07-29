@@ -41,7 +41,7 @@ export function VendorCard({
     formState: { errors },
   } = useForm<VendorFormValues>({
     resolver: zodResolver(vendorSchema),
-    defaultValues: {
+    values: {
       name: vendor.name,
       contact_phone: vendor.contact_phone ?? "",
       contact_email: vendor.contact_email ?? "",
@@ -186,10 +186,15 @@ export function VendorCard({
                 : `¿Eliminar a "${vendor.name}"?`
             }
             onConfirm={async () => {
-              await deleteVendor(vendor.id, eventId);
+              const result = await deleteVendor(vendor.id, eventId);
+              if (result?.error) {
+                setServerError(result.error);
+                return;
+              }
               router.refresh();
             }}
           />
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
           <VendorAttachments
             eventId={eventId}
             vendorId={vendor.id}

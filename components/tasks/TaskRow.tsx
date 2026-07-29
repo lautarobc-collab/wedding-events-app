@@ -48,7 +48,7 @@ export function TaskRow({
     formState: { errors },
   } = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
-    defaultValues: {
+    values: {
       title: task.title,
       due_date: task.due_date ?? "",
       status: task.status,
@@ -163,10 +163,17 @@ export function TaskRow({
         <ConfirmDeleteButton
           confirmMessage={`¿Eliminar la tarea "${task.title}"?`}
           onConfirm={async () => {
-            await deleteTask(task.id, eventId);
+            const result = await deleteTask(task.id, eventId);
+            if (result?.error) {
+              setServerError(result.error);
+              return;
+            }
             router.refresh();
           }}
         />
+      )}
+      {!editing && serverError && (
+        <p className="w-full text-sm text-red-600 dark:text-red-400">{serverError}</p>
       )}
     </div>
   );

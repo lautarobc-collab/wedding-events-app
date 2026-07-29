@@ -49,7 +49,7 @@ export function GuestRow({
     formState: { errors },
   } = useForm<GuestFormValues>({
     resolver: zodResolver(guestSchema),
-    defaultValues: {
+    values: {
       first_name: guest.first_name,
       last_name: guest.last_name ?? "",
       email: guest.email ?? "",
@@ -205,7 +205,11 @@ export function GuestRow({
           <ConfirmDeleteButton
             confirmMessage={`¿Eliminar a ${guest.first_name}?`}
             onConfirm={async () => {
-              await deleteGuest(guest.id, eventId);
+              const result = await deleteGuest(guest.id, eventId);
+              if (result?.error) {
+                setServerError(result.error);
+                return;
+              }
               router.refresh();
             }}
           />

@@ -35,7 +35,7 @@ export function BudgetItemRow({
     formState: { errors },
   } = useForm<BudgetItemFormValues>({
     resolver: zodResolver(budgetItemSchema),
-    defaultValues: {
+    values: {
       description: item.description,
       estimated: item.estimated,
       actual: item.actual,
@@ -131,11 +131,18 @@ export function BudgetItemRow({
                 : `¿Eliminar "${item.description}"?`
             }
             onConfirm={async () => {
-              await deleteBudgetItem(item.id, eventId);
+              const result = await deleteBudgetItem(item.id, eventId);
+              if (result?.error) {
+                setServerError(result.error);
+                return;
+              }
               router.refresh();
             }}
           />
         </div>
+      )}
+      {!editing && serverError && (
+        <p className="w-full text-sm text-red-600 dark:text-red-400">{serverError}</p>
       )}
     </div>
   );

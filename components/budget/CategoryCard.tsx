@@ -36,7 +36,7 @@ export function CategoryCard({
     formState: { errors },
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
-    defaultValues: { name: category.name },
+    values: { name: category.name },
   });
 
   const { estimated, actual } = sumBudget(items, chosenVendors);
@@ -87,10 +87,17 @@ export function CategoryCard({
           confirmMessage={`¿Eliminar la categoría "${category.name}" y todos sus gastos? Esta acción no se puede deshacer.`}
           label="Eliminar categoría"
           onConfirm={async () => {
-            await deleteCategory(category.id, eventId);
+            const result = await deleteCategory(category.id, eventId);
+            if (result?.error) {
+              setServerError(result.error);
+              return;
+            }
             router.refresh();
           }}
         />
+        {!editing && serverError && (
+          <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">

@@ -27,7 +27,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
     formState: { errors },
   } = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
-    defaultValues: {
+    values: {
       name: event.name,
       event_type: event.event_type,
       event_date: event.event_date ?? "",

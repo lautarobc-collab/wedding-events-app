@@ -53,6 +53,7 @@ export async function deleteCategory(categoryId: string, eventId: string) {
   revalidatePath(`/eventos/${eventId}/presupuesto`);
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}`);
+  return { success: true };
 }
 
 export async function createBudgetItem(

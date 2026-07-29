@@ -69,7 +69,15 @@ export function VendorAttachments({
                     className="text-red-600 dark:text-red-400 underline disabled:opacity-50"
                     confirmMessage={`¿Eliminar "${attachment.file_name}"?`}
                     onConfirm={async () => {
-                      await deleteVendorAttachment(attachment.id, attachment.file_path, eventId);
+                      const result = await deleteVendorAttachment(
+                        attachment.id,
+                        attachment.file_path,
+                        eventId,
+                      );
+                      if (result?.error) {
+                        setError(result.error);
+                        return;
+                      }
                       router.refresh();
                     }}
                   />

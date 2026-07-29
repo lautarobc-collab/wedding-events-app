@@ -23,7 +23,7 @@ export function GiftRow({ eventId, guest }: { eventId: string; guest: GuestGift 
     handleSubmit,
   } = useForm<GiftFormValues>({
     resolver: zodResolver(giftSchema),
-    defaultValues: { gift_description: guest.gift_description ?? "" },
+    values: { gift_description: guest.gift_description ?? "" },
   });
 
   async function onSubmit(values: GiftFormValues) {

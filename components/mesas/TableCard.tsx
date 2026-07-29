@@ -33,7 +33,7 @@ export function TableCard({
     formState: { errors },
   } = useForm<TableFormValues>({
     resolver: zodResolver(tableSchema),
-    defaultValues: { name: table.name, capacity: table.capacity },
+    values: { name: table.name, capacity: table.capacity },
   });
 
   async function onSubmit(values: TableFormValues) {
@@ -93,12 +93,19 @@ export function TableCard({
             label="Eliminar mesa"
             confirmMessage={`¿Eliminar "${table.name}"? Sus invitados quedarán sin mesa asignada.`}
             onConfirm={async () => {
-              await deleteTable(table.id, eventId);
+              const result = await deleteTable(table.id, eventId);
+              if (result?.error) {
+                setServerError(result.error);
+                return;
+              }
               router.refresh();
             }}
           />
         )}
       </div>
+      {!editing && serverError && (
+        <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>
+      )}
 
       <div className="flex flex-col gap-2">
         {guests.map((guest) => (
