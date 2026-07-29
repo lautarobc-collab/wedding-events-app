@@ -26,7 +26,9 @@ export default async function BudgetPage({
   const categoriesRaw = categoriesData ?? [];
   const categories: Category[] = categoriesRaw;
   const items = categoriesRaw.flatMap((category) => category.budget_items);
-  const vendors = categoriesRaw.flatMap((category) => category.vendors);
+  // Los proveedores archivados no aparecen como opción para vincular un
+  // gasto ni cuentan aparte en el fallback de "proveedor elegido" de abajo.
+  const vendors = categoriesRaw.flatMap((category) => category.vendors).filter((v) => !v.archived);
   // Un proveedor "elegido" con un gasto ya vinculado no se vuelve a sumar
   // aparte: el gasto vinculado es el que manda, para no contar el mismo
   // coste dos veces.

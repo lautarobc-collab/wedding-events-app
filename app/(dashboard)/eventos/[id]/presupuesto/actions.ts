@@ -14,18 +14,22 @@ export async function createCategory(eventId: string, name: string, sortOrder: n
 
   const supabase = await createClient();
 
-  const { error } = await supabase.from("categories").insert({
-    event_id: eventId,
-    name: parsed.data.name,
-    sort_order: sortOrder,
-  });
+  const { data, error } = await supabase
+    .from("categories")
+    .insert({
+      event_id: eventId,
+      name: parsed.data.name,
+      sort_order: sortOrder,
+    })
+    .select("id")
+    .single();
 
   if (error) return { error: error.message };
 
   revalidatePath(`/eventos/${eventId}/presupuesto`);
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}`);
-  return { success: true };
+  return { success: true, id: data.id };
 }
 
 export async function updateCategory(categoryId: string, eventId: string, name: string) {

@@ -144,6 +144,7 @@ export type Vendor = {
   status: VendorStatus;
   notes: string | null;
   rating: number | null;
+  archived: boolean;
 };
 
 export type VendorAttachment = {

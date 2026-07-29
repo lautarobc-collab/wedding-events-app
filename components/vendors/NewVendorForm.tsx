@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
+import { createCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
 import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 import type { Category } from "@/lib/types";
+
+const NEW_CATEGORY_VALUE = "__new__";
 
 export function NewVendorForm({
   eventId,
@@ -17,7 +20,8 @@ export function NewVendorForm({
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
+  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? NEW_CATEGORY_VALUE);
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
@@ -31,7 +35,22 @@ export function NewVendorForm({
 
   async function onSubmit(values: VendorFormValues) {
     setServerError(null);
-    const result = await createVendor(categoryId, eventId, values);
+
+    let targetCategoryId = categoryId;
+    if (categoryId === NEW_CATEGORY_VALUE) {
+      if (!newCategoryName.trim()) {
+        setServerError("Ponle un nombre a la nueva categoría.");
+        return;
+      }
+      const categoryResult = await createCategory(eventId, newCategoryName.trim(), categories.length);
+      if (categoryResult?.error || !categoryResult?.id) {
+        setServerError(categoryResult?.error ?? "No se pudo crear la categoría.");
+        return;
+      }
+      targetCategoryId = categoryResult.id;
+    }
+
+    const result = await createVendor(targetCategoryId, eventId, values);
     if (result?.error) {
       setServerError(result.error);
       return;
@@ -46,11 +65,11 @@ export function NewVendorForm({
       status: "candidato",
       notes: "",
     });
+    setNewCategoryName("");
+    setCategoryId(categories[0]?.id ?? NEW_CATEGORY_VALUE);
     setOpen(false);
     router.refresh();
   }
-
-  if (categories.length === 0) return null;
 
   if (!open) {
     return (
@@ -81,8 +100,20 @@ export function NewVendorForm({
               {category.name}
             </option>
           ))}
+          <option value={NEW_CATEGORY_VALUE}>+ Nueva categoría</option>
         </select>
       </div>
+      {categoryId === NEW_CATEGORY_VALUE && (
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Nombre de la nueva categoría</label>
+          <input
+            placeholder="Ej. Flores"
+            value={newCategoryName}
+            onChange={(event) => setNewCategoryName(event.target.value)}
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+          />
+        </div>
+      )}
       <div className="flex flex-col gap-1">
         <label className="text-sm">Nombre</label>
         <input
@@ -118,7 +149,9 @@ export function NewVendorForm({
       </div>
       <button
         type="submit"
-        disabled={isSubmitting || !categoryId}
+        disabled={
+          isSubmitting || !categoryId || (categoryId === NEW_CATEGORY_VALUE && !newCategoryName.trim())
+        }
         className="rounded bg-neutral-900 dark:bg-neutral-100 px-3 py-1.5 text-sm text-white dark:text-neutral-900 disabled:opacity-50"
       >
         {isSubmitting ? "Añadiendo..." : "Añadir"}

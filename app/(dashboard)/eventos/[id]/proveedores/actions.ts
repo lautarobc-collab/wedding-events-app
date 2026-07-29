@@ -151,6 +151,48 @@ export async function updateVendor(
   return { success: true };
 }
 
+export async function setVendorArchived(vendorId: string, eventId: string, archived: boolean) {
+  const supabase = await createClient();
+
+  const { data: vendor, error: fetchError } = await supabase
+    .from("vendors")
+    .select("status, category_id, name, estimated, actual")
+    .eq("id", vendorId)
+    .single();
+  if (fetchError) return { error: fetchError.message };
+
+  const { error } = await supabase.from("vendors").update({ archived }).eq("id", vendorId);
+  if (error) return { error: error.message };
+
+  if (archived) {
+    // Archivar oculta al proveedor de la vista activa; cualquier gasto que
+    // lo referenciara se desvincula (no se borra), igual que al cambiar de
+    // estado — nunca se borra dinero sin que lo pidan explícitamente.
+    const { error: unlinkError } = await supabase
+      .from("budget_items")
+      .update({ vendor_id: null })
+      .eq("vendor_id", vendorId);
+    if (unlinkError) return { error: unlinkError.message };
+  } else if (vendor.status === "elegido") {
+    // Al desarchivar un proveedor que sigue "elegido", se restaura su
+    // línea de presupuesto si no quedó ninguna vinculada.
+    const linkError = await ensureLinkedBudgetItem(
+      supabase,
+      vendorId,
+      vendor.category_id,
+      vendor.name,
+      vendor.estimated,
+      vendor.actual,
+    );
+    if (linkError) return { error: linkError.message };
+  }
+
+  revalidatePath(`/eventos/${eventId}/proveedores`);
+  revalidatePath(`/eventos/${eventId}/presupuesto`);
+  revalidatePath(`/eventos/${eventId}`);
+  return { success: true };
+}
+
 export async function deleteVendor(vendorId: string, eventId: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("vendors").delete().eq("id", vendorId);

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteVendor, updateVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
+import { deleteVendor, setVendorArchived, updateVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
 import { formatMoney } from "@/lib/format";
 import { VENDOR_STATUS_LABEL, type Vendor, type VendorAttachment, type VendorStatus } from "@/lib/types";
 import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
@@ -66,7 +66,9 @@ export function VendorCard({
   }
 
   return (
-    <div className="rounded border border-neutral-200 dark:border-neutral-800 p-3 hover:border-neutral-300 dark:hover:border-neutral-700">
+    <div
+      className={`rounded border border-neutral-200 dark:border-neutral-800 p-3 hover:border-neutral-300 dark:hover:border-neutral-700 ${vendor.archived ? "opacity-60" : ""}`}
+    >
       <InlineEditable
         editing={editing}
         onStartEdit={() => setEditing(true)}
@@ -76,10 +78,15 @@ export function VendorCard({
           <div className="flex flex-col gap-2">
             <div className="flex items-start justify-between gap-2">
               <p className="font-medium">{vendor.name}</p>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[vendor.status]}`}
-              >
-                {VENDOR_STATUS_LABEL[vendor.status]}
+              <span className="flex shrink-0 gap-1">
+                {vendor.archived && (
+                  <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    Archivado
+                  </span>
+                )}
+                <span className={`rounded-full px-2 py-0.5 text-xs ${STATUS_STYLES[vendor.status]}`}>
+                  {VENDOR_STATUS_LABEL[vendor.status]}
+                </span>
               </span>
             </div>
 
@@ -93,7 +100,7 @@ export function VendorCard({
               </p>
             )}
 
-            {vendor.status === "elegido" && (
+            {vendor.status === "elegido" && !vendor.archived && (
               <p className="text-xs text-neutral-400 dark:text-neutral-500">
                 Tiene una línea de gasto vinculada en Presupuesto.
               </p>
@@ -179,21 +186,38 @@ export function VendorCard({
 
       {!editing && (
         <div className="mt-2 flex flex-col gap-2">
-          <ConfirmDeleteButton
-            confirmMessage={
-              vendor.status === "elegido"
-                ? `¿Eliminar a "${vendor.name}"? Tiene un gasto vinculado en Presupuesto que se mantendrá, pero sin proveedor asociado.`
-                : `¿Eliminar a "${vendor.name}"?`
-            }
-            onConfirm={async () => {
-              const result = await deleteVendor(vendor.id, eventId);
-              if (result?.error) {
-                setServerError(result.error);
-                return;
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={async () => {
+                setServerError(null);
+                const result = await setVendorArchived(vendor.id, eventId, !vendor.archived);
+                if (result?.error) {
+                  setServerError(result.error);
+                  return;
+                }
+                router.refresh();
+              }}
+              className="text-sm text-neutral-600 dark:text-neutral-400 underline"
+            >
+              {vendor.archived ? "Desarchivar" : "Archivar"}
+            </button>
+            <ConfirmDeleteButton
+              confirmMessage={
+                vendor.status === "elegido" && !vendor.archived
+                  ? `¿Eliminar a "${vendor.name}"? Tiene un gasto vinculado en Presupuesto que se mantendrá, pero sin proveedor asociado.`
+                  : `¿Eliminar a "${vendor.name}"?`
               }
-              router.refresh();
-            }}
-          />
+              onConfirm={async () => {
+                const result = await deleteVendor(vendor.id, eventId);
+                if (result?.error) {
+                  setServerError(result.error);
+                  return;
+                }
+                router.refresh();
+              }}
+            />
+          </div>
           {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
           <VendorAttachments
             eventId={eventId}

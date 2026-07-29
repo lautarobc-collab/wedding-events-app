@@ -84,7 +84,7 @@ export function CategoryCard({
           )}
         </div>
         <ConfirmDeleteButton
-          confirmMessage={`¿Eliminar la categoría "${category.name}" y todos sus gastos? Esta acción no se puede deshacer.`}
+          confirmMessage={`¿Eliminar la categoría "${category.name}" y todos sus gastos y proveedores (incluidos los archivados)? Esta acción no se puede deshacer.`}
           label="Eliminar categoría"
           onConfirm={async () => {
             const result = await deleteCategory(category.id, eventId);
