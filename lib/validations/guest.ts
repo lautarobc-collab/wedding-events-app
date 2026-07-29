@@ -15,11 +15,6 @@ export const guestSchema = z.object({
   email: z.string().trim().max(160).optional(),
   invited_by: z.string().trim().max(80).optional(),
   dietary_restrictions: z.string().trim().max(300).optional(),
-  table_number: z
-    .number({ error: "Tiene que ser un número" })
-    .int()
-    .nonnegative()
-    .optional(),
   companions: z.array(companionSchema),
 });
 

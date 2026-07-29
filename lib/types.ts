@@ -56,10 +56,18 @@ export type Guest = {
   email: string | null;
   invited_by: string | null;
   dietary_restrictions: string | null;
-  table_number: number | null;
+  table_id: string | null;
   gift_description: string | null;
   thank_you_sent: boolean;
   invitation_status: InvitationStatus;
+};
+
+export type SeatingTable = {
+  id: string;
+  event_id: string;
+  name: string;
+  capacity: number;
+  sort_order: number;
 };
 
 export type GuestCompanion = {

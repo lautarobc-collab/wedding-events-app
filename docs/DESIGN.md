@@ -83,11 +83,20 @@ create table guests (
   last_name text,
   email text,
   invited_by text,
-  plus_ones int default 0,
   dietary_restrictions text,
-  table_number int,
+  table_id uuid references tables, -- ver tables abajo (migración 0015)
+  invitation_status text not null default 'invitado',
   gift_description text,
   thank_you_sent boolean default false
+);
+-- acompañantes: ver guest_companions (migración 0006)
+
+create table tables (
+  id uuid primary key default gen_random_uuid(),
+  event_id uuid references events not null,
+  name text not null,
+  capacity int not null default 8,
+  sort_order int default 0
 );
 
 create table rsvp_responses (

@@ -36,7 +36,6 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
       email: "",
       invited_by: "",
       dietary_restrictions: "",
-      table_number: undefined,
       companions: [],
     });
     router.refresh();

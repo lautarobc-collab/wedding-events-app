@@ -11,7 +11,7 @@ import {
   updateGuest,
 } from "@/app/(dashboard)/eventos/[id]/invitados/actions";
 import { guestAttendingStatus, guestStatus, GUEST_STATUS_LABEL, type GuestStatus } from "@/lib/rsvp";
-import type { Guest, GuestCompanion, RsvpResponse } from "@/lib/types";
+import type { Guest, GuestCompanion, RsvpResponse, SeatingTable } from "@/lib/types";
 import { guestSchema, type GuestFormValues } from "@/lib/validations/guest";
 import { ShareRsvpButton } from "./ShareRsvpButton";
 import { ConfirmDeleteButton } from "@/components/ConfirmDeleteButton";
@@ -31,10 +31,12 @@ export function GuestRow({
   eventId,
   slug,
   guest,
+  tables,
 }: {
   eventId: string;
   slug: string | null;
   guest: Guest & { rsvp_responses: RsvpResponse[]; guest_companions: GuestCompanion[] };
+  tables: SeatingTable[];
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -53,7 +55,6 @@ export function GuestRow({
       email: guest.email ?? "",
       invited_by: guest.invited_by ?? "",
       dietary_restrictions: guest.dietary_restrictions ?? "",
-      table_number: guest.table_number ?? undefined,
       companions: guest.guest_companions.map((companion) => ({
         id: companion.id,
         name: companion.name ?? "",
@@ -98,6 +99,7 @@ export function GuestRow({
   }
 
   const childrenCount = guest.guest_companions.filter((c) => c.is_child).length;
+  const table = tables.find((t) => t.id === guest.table_id);
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded border border-neutral-200 dark:border-neutral-800 px-4 py-3 text-sm">
@@ -117,7 +119,7 @@ export function GuestRow({
                 ? `+${guest.guest_companions.length} acompañantes invitados`
                 : ""}
               {childrenCount > 0 ? ` (${childrenCount} niños)` : ""}
-              {guest.table_number != null ? ` · Mesa ${guest.table_number}` : ""}
+              {table ? ` · Mesa: ${table.name}` : ""}
             </p>
           </div>
         }
@@ -144,15 +146,6 @@ export function GuestRow({
               placeholder="Invitado por"
               {...register("invited_by")}
               className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
-            />
-            <input
-              type="number"
-              min={0}
-              placeholder="Mesa"
-              {...register("table_number", {
-                setValueAs: (v) => (v === "" ? undefined : Number(v)),
-              })}
-              className="w-20 rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
 

@@ -16,7 +16,6 @@ export async function createGuest(eventId: string, values: GuestFormValues) {
     email,
     invited_by,
     dietary_restrictions,
-    table_number,
     companions,
   } = parsed.data;
 
@@ -30,7 +29,6 @@ export async function createGuest(eventId: string, values: GuestFormValues) {
       email: email || null,
       invited_by: invited_by || null,
       dietary_restrictions: dietary_restrictions || null,
-      table_number: table_number ?? null,
     })
     .select("id")
     .single();
@@ -68,7 +66,6 @@ export async function updateGuest(
     email,
     invited_by,
     dietary_restrictions,
-    table_number,
     companions,
   } = parsed.data;
 
@@ -81,7 +78,6 @@ export async function updateGuest(
       email: email || null,
       invited_by: invited_by || null,
       dietary_restrictions: dietary_restrictions || null,
-      table_number: table_number ?? null,
     })
     .eq("id", guestId);
 
