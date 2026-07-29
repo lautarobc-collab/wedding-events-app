@@ -123,23 +123,25 @@ export async function deleteBudgetItem(itemId: string, eventId: string) {
 
   const { data: item } = await supabase
     .from("budget_items")
-    .select("vendor_id")
+    .select("vendor_id, category_id")
     .eq("id", itemId)
     .maybeSingle();
 
   const { error } = await supabase.from("budget_items").delete().eq("id", itemId);
   if (error) return { error: error.message };
 
-  // El gasto vinculado es lo que sostiene el estado "elegido" de un
-  // proveedor (ver #18); si desaparece, el proveedor deja de estar decidido.
-  // El .eq("status", "elegido") evita tocar un proveedor que solo estaba
-  // vinculado a mano sin ser el "elegido" de su categoría.
+  // El gasto vinculado EN SU PROPIA CATEGORÍA es lo que sostiene el estado
+  // "elegido" de un proveedor (ver #18); si desaparece, el proveedor deja de
+  // estar decidido. El .eq("category_id", ...) evita revertir el estado por
+  // borrar un vínculo manual en otra categoría (#64), que no tiene relación
+  // con si el proveedor sigue "elegido" en la suya.
   if (item?.vendor_id) {
     await supabase
       .from("vendors")
       .update({ status: "contactado" })
       .eq("id", item.vendor_id)
-      .eq("status", "elegido");
+      .eq("status", "elegido")
+      .eq("category_id", item.category_id);
   }
 
   revalidatePath(`/eventos/${eventId}/presupuesto`);

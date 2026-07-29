@@ -4,11 +4,16 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 
-// Si el proveedor pasa a "elegido" y todavía no tiene ningún gasto vinculado,
-// se crea uno automáticamente (con su nombre y estimado/real) en vez de dejar
-// que cuente como un total invisible en Presupuesto. Así el proveedor→gasto
-// queda conectado sin que el usuario tenga que acordarse de vincularlo a
-// mano, sin forzar un proveedor obligatorio en cada gasto manual.
+// Si el proveedor pasa a "elegido" y todavía no tiene ningún gasto vinculado
+// EN SU PROPIA CATEGORÍA, se crea uno automáticamente (con su nombre y
+// estimado/real) en vez de dejar que cuente como un total invisible en
+// Presupuesto. Así el proveedor→gasto queda conectado sin que el usuario
+// tenga que acordarse de vincularlo a mano, sin forzar un proveedor
+// obligatorio en cada gasto manual.
+// Importante: la comprobación de "ya vinculado" se acota a categoryId. Un
+// proveedor puede estar vinculado a mano a gastos de OTRAS categorías (ver
+// #64); si no acotáramos por categoría, ese vínculo ajeno haría pensar que
+// ya está cubierto y nunca se crearía su línea de "elegido" propia.
 async function ensureLinkedBudgetItem(
   supabase: Awaited<ReturnType<typeof createClient>>,
   vendorId: string,
@@ -21,6 +26,7 @@ async function ensureLinkedBudgetItem(
     .from("budget_items")
     .select("id")
     .eq("vendor_id", vendorId)
+    .eq("category_id", categoryId)
     .maybeSingle();
 
   if (existingLink) return null;
@@ -123,13 +129,16 @@ export async function updateVendor(
     );
     if (linkError) return { error: linkError.message };
   } else if (wasElegido) {
-    // Deja de estar "elegido": el gasto vinculado se conserva (no se borra
-    // dinero sin que lo pidan explícitamente), solo pierde la referencia
-    // al proveedor y pasa a ser una línea manual.
+    // Deja de estar "elegido": el gasto vinculado en SU categoría se
+    // conserva (no se borra dinero sin que lo pidan explícitamente), solo
+    // pierde la referencia al proveedor y pasa a ser una línea manual. Los
+    // vínculos manuales en otras categorías (#64) no se tocan — no tienen
+    // relación con este cambio de estado.
     const { error: unlinkError } = await supabase
       .from("budget_items")
       .update({ vendor_id: null })
-      .eq("vendor_id", vendorId);
+      .eq("vendor_id", vendorId)
+      .eq("category_id", vendor.category_id);
     if (unlinkError) return { error: unlinkError.message };
   }
 
@@ -153,13 +162,14 @@ export async function setVendorArchived(vendorId: string, eventId: string, archi
   if (error) return { error: error.message };
 
   if (archived) {
-    // Archivar oculta al proveedor de la vista activa; cualquier gasto que
-    // lo referenciara se desvincula (no se borra), igual que al cambiar de
-    // estado — nunca se borra dinero sin que lo pidan explícitamente.
+    // Archivar oculta al proveedor de la vista activa; el gasto vinculado
+    // en SU categoría se desvincula (no se borra), igual que al cambiar de
+    // estado. Los vínculos manuales en otras categorías (#64) no se tocan.
     const { error: unlinkError } = await supabase
       .from("budget_items")
       .update({ vendor_id: null })
-      .eq("vendor_id", vendorId);
+      .eq("vendor_id", vendorId)
+      .eq("category_id", vendor.category_id);
     if (unlinkError) return { error: unlinkError.message };
   } else if (vendor.status === "elegido") {
     // Al desarchivar un proveedor que sigue "elegido", se restaura su
