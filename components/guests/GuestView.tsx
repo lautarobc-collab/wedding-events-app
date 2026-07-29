@@ -28,6 +28,7 @@ export function GuestView({
   tables: SeatingTable[];
 }) {
   const [selected, setSelected] = useState<GuestStatus | null>(null);
+  const [search, setSearch] = useState("");
 
   const statusByGuestId = new Map(
     guests.map((guest) => [guest.id, guestStatus(guest.invitation_status, guest.rsvp_responses)]),
@@ -45,9 +46,14 @@ export function GuestView({
     counts[status] += 1;
   }
 
-  const visibleGuests = selected
-    ? guests.filter((guest) => statusByGuestId.get(guest.id) === selected)
-    : guests;
+  const normalizedSearch = search.trim().toLowerCase();
+  const visibleGuests = guests
+    .filter((guest) => !selected || statusByGuestId.get(guest.id) === selected)
+    .filter(
+      (guest) =>
+        !normalizedSearch ||
+        `${guest.first_name} ${guest.last_name ?? ""}`.toLowerCase().includes(normalizedSearch),
+    );
 
   const csv = toCsv(guests, [
     { label: "Nombre", value: (g) => g.first_name },
@@ -67,6 +73,14 @@ export function GuestView({
       <GuestSummary guests={guests} />
       <GuestChart counts={counts} selected={selected} onSelect={setSelected} />
 
+      <input
+        type="search"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+        placeholder="Buscar invitado por nombre..."
+        className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
+      />
+
       <div className="flex flex-col gap-2">
         {visibleGuests.map((guest) => (
           <GuestRow key={guest.id} eventId={eventId} slug={slug} guest={guest} tables={tables} />
@@ -75,7 +89,7 @@ export function GuestView({
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {guests.length === 0
               ? "Todavía no añadiste invitados."
-              : "Ningún invitado coincide con el filtro."}
+              : "Ningún invitado coincide con la búsqueda o el filtro."}
           </p>
         )}
       </div>
