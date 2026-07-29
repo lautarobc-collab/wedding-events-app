@@ -156,3 +156,5 @@ export type VendorAttachment = {
   size_bytes: number;
   created_at: string;
 };
+
+export type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };

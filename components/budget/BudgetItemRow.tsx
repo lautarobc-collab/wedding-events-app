@@ -137,7 +137,7 @@ export function BudgetItemRow({
           </span>
           <ConfirmDeleteButton
             confirmMessage={
-              linkedVendor?.status === "elegido"
+              linkedVendor?.status === "elegido" && linkedVendor.category_id === item.category_id
                 ? `¿Eliminar "${item.description}"? Está vinculado al proveedor "${linkedVendor.name}" (elegido); si lo eliminas, el proveedor pasará a "Contactado".`
                 : `¿Eliminar "${item.description}"?`
             }

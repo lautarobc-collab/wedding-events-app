@@ -5,9 +5,8 @@ import { VendorCategorySection } from "./VendorCategorySection";
 import { VendorDirectory } from "./VendorDirectory";
 import { ArchivedVendorsSection } from "./ArchivedVendorsSection";
 import { NewVendorForm } from "./NewVendorForm";
-import type { Category, Vendor, VendorAttachment } from "@/lib/types";
+import type { Category, VendorWithAttachments } from "@/lib/types";
 
-type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 type CategoryWithVendors = Category & { vendors: VendorWithAttachments[] };
 
 export function ProveedoresView({

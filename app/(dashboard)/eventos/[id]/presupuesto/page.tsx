@@ -33,8 +33,7 @@ export default async function BudgetPage({
   // no se vuelve a sumar aparte: el gasto vinculado es el que manda, para no
   // contar el mismo coste dos veces. Importante: se comprueba por categoría,
   // no solo por vendor_id — un proveedor puede estar vinculado a mano a un
-  // gasto de otra categoría (#64) sin que eso cubra su propia línea de
-  // "elegido".
+  // gasto de otra categoría sin que eso cubra su propia línea de "elegido".
   const chosenVendors = vendors.filter(
     (vendor) =>
       vendor.status === "elegido" &&

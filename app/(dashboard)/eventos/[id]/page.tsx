@@ -65,11 +65,21 @@ export default async function EventSummaryPage({
   const guests = guestsData ?? [];
   const tasks = tasksData ?? [];
   const budgetItems = budgetItemsData ?? [];
-  const vendors = vendorsData ?? [];
+  // Los proveedores archivados no cuentan en el resumen, igual que en
+  // Presupuesto y Proveedores.
+  const vendors = (vendorsData ?? []).filter((vendor) => !vendor.archived);
 
-  const linkedVendorIds = new Set(budgetItems.map((item) => item.vendor_id).filter(Boolean));
+  // Un proveedor "elegido" con un gasto ya vinculado EN SU PROPIA CATEGORÍA
+  // no se vuelve a sumar aparte (evita contar el mismo coste dos veces). Se
+  // comprueba por categoría, no solo por vendor_id: un proveedor puede estar
+  // vinculado a mano a un gasto de otra categoría sin que eso cubra su
+  // propia línea de "elegido" — mismo criterio que en Presupuesto.
   const chosenVendors = vendors.filter(
-    (vendor) => vendor.status === "elegido" && !linkedVendorIds.has(vendor.id),
+    (vendor) =>
+      vendor.status === "elegido" &&
+      !budgetItems.some(
+        (item) => item.vendor_id === vendor.id && item.category_id === vendor.category_id,
+      ),
   );
   const { estimated: budgetEstimated, actual: budgetActual } = sumBudget(budgetItems, chosenVendors);
 

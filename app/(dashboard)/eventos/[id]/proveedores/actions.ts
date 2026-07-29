@@ -11,9 +11,9 @@ import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 // tenga que acordarse de vincularlo a mano, sin forzar un proveedor
 // obligatorio en cada gasto manual.
 // Importante: la comprobación de "ya vinculado" se acota a categoryId. Un
-// proveedor puede estar vinculado a mano a gastos de OTRAS categorías (ver
-// #64); si no acotáramos por categoría, ese vínculo ajeno haría pensar que
-// ya está cubierto y nunca se crearía su línea de "elegido" propia.
+// proveedor puede estar vinculado a mano a gastos de otras categorías; si
+// no acotáramos por categoría, ese vínculo ajeno haría pensar que ya está
+// cubierto y nunca se crearía su línea de "elegido" propia.
 async function ensureLinkedBudgetItem(
   supabase: Awaited<ReturnType<typeof createClient>>,
   vendorId: string,
@@ -70,9 +70,9 @@ export async function createVendor(
   if (error) return { error: error.message };
 
   // A propósito, aquí NO se crea el gasto vinculado aunque el estado ya sea
-  // "elegido" — eso solo pasa al editar la ficha después (ver updateVendor),
-  // para no generar una línea en Presupuesto antes de que el usuario termine
-  // de crear el proveedor.
+  // "elegido" — eso solo pasa al editar la ficha existente después, para no
+  // generar una línea en Presupuesto antes de que el usuario termine de
+  // crear el proveedor.
   revalidatePath(`/eventos/${eventId}/proveedores`);
   revalidatePath(`/eventos/${eventId}/presupuesto`);
   revalidatePath(`/eventos/${eventId}`);
@@ -132,7 +132,7 @@ export async function updateVendor(
     // Deja de estar "elegido": el gasto vinculado en SU categoría se
     // conserva (no se borra dinero sin que lo pidan explícitamente), solo
     // pierde la referencia al proveedor y pasa a ser una línea manual. Los
-    // vínculos manuales en otras categorías (#64) no se tocan — no tienen
+    // vínculos manuales en otras categorías no se tocan — no tienen
     // relación con este cambio de estado.
     const { error: unlinkError } = await supabase
       .from("budget_items")
@@ -164,7 +164,7 @@ export async function setVendorArchived(vendorId: string, eventId: string, archi
   if (archived) {
     // Archivar oculta al proveedor de la vista activa; el gasto vinculado
     // en SU categoría se desvincula (no se borra), igual que al cambiar de
-    // estado. Los vínculos manuales en otras categorías (#64) no se tocan.
+    // estado. Los vínculos manuales en otras categorías no se tocan.
     const { error: unlinkError } = await supabase
       .from("budget_items")
       .update({ vendor_id: null })

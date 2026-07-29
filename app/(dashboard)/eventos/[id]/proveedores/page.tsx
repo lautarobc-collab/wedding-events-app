@@ -1,9 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { getEvent } from "@/lib/events";
 import { ProveedoresView } from "@/components/vendors/ProveedoresView";
-import type { Category, Vendor, VendorAttachment } from "@/lib/types";
+import type { Category, VendorWithAttachments } from "@/lib/types";
 
-type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 type CategoryWithVendors = Category & { vendors: VendorWithAttachments[] };
 
 export default async function VendorsPage({

@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Category, Vendor, VendorAttachment } from "@/lib/types";
+import type { Category, VendorWithAttachments } from "@/lib/types";
 import { VendorCard } from "./VendorCard";
 import { VendorComparisonTable } from "./VendorComparisonTable";
-
-type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 
 export function VendorCategorySection({
   eventId,

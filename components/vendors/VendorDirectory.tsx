@@ -1,8 +1,6 @@
 import { formatMoney } from "@/lib/format";
-import type { Category, Vendor, VendorAttachment } from "@/lib/types";
+import type { Category, VendorWithAttachments } from "@/lib/types";
 import { VendorCard } from "./VendorCard";
-
-type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 
 export function VendorDirectory({
   eventId,

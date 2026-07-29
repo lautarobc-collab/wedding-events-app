@@ -131,10 +131,10 @@ export async function deleteBudgetItem(itemId: string, eventId: string) {
   if (error) return { error: error.message };
 
   // El gasto vinculado EN SU PROPIA CATEGORÍA es lo que sostiene el estado
-  // "elegido" de un proveedor (ver #18); si desaparece, el proveedor deja de
-  // estar decidido. El .eq("category_id", ...) evita revertir el estado por
-  // borrar un vínculo manual en otra categoría (#64), que no tiene relación
-  // con si el proveedor sigue "elegido" en la suya.
+  // "elegido" de un proveedor; si desaparece, el proveedor deja de estar
+  // decidido. El .eq("category_id", ...) evita revertir el estado por
+  // borrar un vínculo manual en otra categoría, que no tiene relación con
+  // si el proveedor sigue "elegido" en la suya.
   if (item?.vendor_id) {
     await supabase
       .from("vendors")

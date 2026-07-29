@@ -18,6 +18,7 @@ export function GiftRow({ eventId, guest }: { eventId: string; guest: GuestGift 
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [pending, setPending] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -27,15 +28,25 @@ export function GiftRow({ eventId, guest }: { eventId: string; guest: GuestGift 
   });
 
   async function onSubmit(values: GiftFormValues) {
-    await updateGiftDescription(guest.id, eventId, values);
+    setServerError(null);
+    const result = await updateGiftDescription(guest.id, eventId, values);
+    if (result?.error) {
+      setServerError(result.error);
+      return;
+    }
     setEditing(false);
     router.refresh();
   }
 
   async function handleToggleThanked() {
+    setServerError(null);
     setPending(true);
-    await toggleThankYouSent(guest.id, eventId, !guest.thank_you_sent);
+    const result = await toggleThankYouSent(guest.id, eventId, !guest.thank_you_sent);
     setPending(false);
+    if (result?.error) {
+      setServerError(result.error);
+      return;
+    }
     router.refresh();
   }
 
@@ -69,15 +80,18 @@ export function GiftRow({ eventId, guest }: { eventId: string; guest: GuestGift 
       </InlineEditable>
 
       {!editing && (
-        <label className="flex shrink-0 items-center gap-2">
-          <input
-            type="checkbox"
-            checked={guest.thank_you_sent}
-            disabled={pending}
-            onChange={handleToggleThanked}
-          />
-          Agradecido
-        </label>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={guest.thank_you_sent}
+              disabled={pending}
+              onChange={handleToggleThanked}
+            />
+            Agradecido
+          </label>
+          {serverError && <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>}
+        </div>
       )}
     </div>
   );

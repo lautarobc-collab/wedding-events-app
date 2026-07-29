@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createVendor } from "@/app/(dashboard)/eventos/[id]/proveedores/actions";
-import { createCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
+import { createCategory, deleteCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
 import { vendorSchema, type VendorFormValues } from "@/lib/validations/vendor";
 import type { Category } from "@/lib/types";
 
@@ -37,6 +37,7 @@ export function NewVendorForm({
     setServerError(null);
 
     let targetCategoryId = categoryId;
+    let createdCategoryId: string | null = null;
     if (categoryId === NEW_CATEGORY_VALUE) {
       if (!newCategoryName.trim()) {
         setServerError("Ponle un nombre a la nueva categoría.");
@@ -48,10 +49,15 @@ export function NewVendorForm({
         return;
       }
       targetCategoryId = categoryResult.id;
+      createdCategoryId = categoryResult.id;
     }
 
     const result = await createVendor(targetCategoryId, eventId, values);
     if (result?.error) {
+      // Si la categoría se acaba de crear para este proveedor y el
+      // proveedor no llegó a guardarse, no dejamos una categoría vacía
+      // huérfana.
+      if (createdCategoryId) await deleteCategory(createdCategoryId, eventId);
       setServerError(result.error);
       return;
     }

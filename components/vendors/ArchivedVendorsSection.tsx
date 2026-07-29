@@ -1,7 +1,5 @@
-import type { Vendor, VendorAttachment } from "@/lib/types";
+import type { VendorWithAttachments } from "@/lib/types";
 import { VendorCard } from "./VendorCard";
-
-type VendorWithAttachments = Vendor & { vendor_attachments: VendorAttachment[] };
 
 export function ArchivedVendorsSection({
   eventId,
