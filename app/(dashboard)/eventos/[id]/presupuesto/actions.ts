@@ -63,7 +63,7 @@ export async function createBudgetItem(
   const parsed = budgetItemSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { description, estimated, actual, vendor_id } = parsed.data;
+  const { description, estimated, actual, vendor_id, expense_date } = parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase.from("budget_items").insert({
@@ -72,6 +72,7 @@ export async function createBudgetItem(
     estimated,
     actual,
     vendor_id: vendor_id || null,
+    expense_date: expense_date || null,
   });
 
   if (error) return { error: error.message };
@@ -90,12 +91,18 @@ export async function updateBudgetItem(
   const parsed = budgetItemSchema.safeParse(values);
   if (!parsed.success) return { error: "Datos inválidos." };
 
-  const { description, estimated, actual, vendor_id } = parsed.data;
+  const { description, estimated, actual, vendor_id, expense_date } = parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("budget_items")
-    .update({ description, estimated, actual, vendor_id: vendor_id || null })
+    .update({
+      description,
+      estimated,
+      actual,
+      vendor_id: vendor_id || null,
+      expense_date: expense_date || null,
+    })
     .eq("id", itemId);
 
   if (error) return { error: error.message };

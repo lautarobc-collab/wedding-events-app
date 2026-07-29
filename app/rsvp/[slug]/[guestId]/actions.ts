@@ -21,6 +21,7 @@ export async function submitRsvp(
     p_confirmed_children: parsed.data.confirmed_children ?? 0,
     p_dietary_notes: parsed.data.dietary_notes || null,
     p_message: parsed.data.message || null,
+    p_companion_names: parsed.data.companion_names ?? [],
   });
 
   if (error) return { error: error.message };

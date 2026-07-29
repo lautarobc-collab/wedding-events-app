@@ -7,6 +7,9 @@ export const rsvpSchema = z
     confirmed_children: z.number().int().nonnegative().optional(),
     dietary_notes: z.string().trim().max(300).optional(),
     message: z.string().trim().max(500).optional(),
+    companion_names: z
+      .array(z.object({ id: z.string(), name: z.string().trim().max(80).optional() }))
+      .optional(),
   })
   .refine(
     (data) =>

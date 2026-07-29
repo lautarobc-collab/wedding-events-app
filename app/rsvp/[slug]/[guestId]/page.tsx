@@ -21,6 +21,12 @@ type RsvpInvite = {
   message: string | null;
 };
 
+type RsvpCompanion = {
+  id: string;
+  is_child: boolean;
+  name: string | null;
+};
+
 export default async function RsvpPage({
   params,
 }: {
@@ -29,13 +35,15 @@ export default async function RsvpPage({
   const { slug, guestId } = await params;
   const supabase = await createClient();
 
-  const { data, error } = await supabase.rpc("get_rsvp_invite", {
-    p_slug: slug,
-    p_guest_id: guestId,
-  });
+  const [{ data, error }, { data: companionsData }] = await Promise.all([
+    supabase.rpc("get_rsvp_invite", { p_slug: slug, p_guest_id: guestId }),
+    supabase.rpc("get_rsvp_companions", { p_slug: slug, p_guest_id: guestId }),
+  ]);
 
   const invite = (data as RsvpInvite[] | null)?.[0];
   if (error || !invite) notFound();
+
+  const companions = (companionsData as RsvpCompanion[] | null) ?? [];
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-8">
@@ -54,7 +62,7 @@ export default async function RsvpPage({
           Ver información del evento
         </Link>
       </div>
-      <RsvpForm slug={slug} guestId={guestId} invite={invite} />
+      <RsvpForm slug={slug} guestId={guestId} invite={invite} companions={companions} />
 
       <p className="text-xs text-neutral-400 dark:text-neutral-500">
         Estos datos (tu respuesta, acompañantes y restricciones alimentarias) los ve

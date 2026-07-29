@@ -33,6 +33,7 @@ export type BudgetItem = {
   estimated: number;
   actual: number;
   vendor_id: string | null;
+  expense_date: string | null;
 };
 
 export type AttendingStatus = "si" | "no" | "quizas";
@@ -62,6 +63,7 @@ export type Guest = {
   gift_description: string | null;
   thank_you_sent: boolean;
   invitation_status: InvitationStatus;
+  group_label: string | null;
 };
 
 export type SeatingTable = {

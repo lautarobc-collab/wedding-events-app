@@ -40,6 +40,7 @@ export function BudgetItemRow({
       estimated: item.estimated,
       actual: item.actual,
       vendor_id: item.vendor_id ?? "",
+      expense_date: item.expense_date ?? "",
     },
   });
 
@@ -106,6 +107,11 @@ export function BudgetItemRow({
               ))}
             </select>
           )}
+          <input
+            type="date"
+            {...register("expense_date")}
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+          />
           {errors.description && (
             <p className="text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
           )}

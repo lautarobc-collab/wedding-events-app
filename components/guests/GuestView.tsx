@@ -29,6 +29,11 @@ export function GuestView({
 }) {
   const [selected, setSelected] = useState<GuestStatus | null>(null);
   const [search, setSearch] = useState("");
+  const [groupFilter, setGroupFilter] = useState("");
+
+  const groups = Array.from(
+    new Set(guests.map((guest) => guest.group_label).filter((label): label is string => !!label)),
+  ).sort((a, b) => a.localeCompare(b));
 
   const statusByGuestId = new Map(
     guests.map((guest) => [guest.id, guestStatus(guest.invitation_status, guest.rsvp_responses)]),
@@ -49,6 +54,7 @@ export function GuestView({
   const normalizedSearch = search.trim().toLowerCase();
   const visibleGuests = guests
     .filter((guest) => !selected || statusByGuestId.get(guest.id) === selected)
+    .filter((guest) => !groupFilter || guest.group_label === groupFilter)
     .filter(
       (guest) =>
         !normalizedSearch ||
@@ -60,6 +66,7 @@ export function GuestView({
     { label: "Apellidos", value: (g) => g.last_name },
     { label: "Email", value: (g) => g.email },
     { label: "Invitado por", value: (g) => g.invited_by },
+    { label: "Grupo", value: (g) => g.group_label },
     { label: "Mesa", value: (g) => (g.table_id ? tableNameById.get(g.table_id) : null) },
     { label: "Estado", value: (g) => GUEST_STATUS_LABEL[statusByGuestId.get(g.id)!] },
     { label: "Acompañantes confirmados", value: (g) => latestRsvp(g.rsvp_responses)?.confirmed_plus_ones },
@@ -73,13 +80,29 @@ export function GuestView({
       <GuestSummary guests={guests} />
       <GuestChart counts={counts} selected={selected} onSelect={setSelected} />
 
-      <input
-        type="search"
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-        placeholder="Buscar invitado por nombre..."
-        className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
-      />
+      <div className="flex flex-wrap gap-2">
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Buscar invitado por nombre..."
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
+        />
+        {groups.length > 0 && (
+          <select
+            value={groupFilter}
+            onChange={(event) => setGroupFilter(event.target.value)}
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
+          >
+            <option value="">Todos los grupos</option>
+            {groups.map((group) => (
+              <option key={group} value={group}>
+                {group}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
 
       <div className="flex flex-col gap-2">
         {visibleGuests.map((guest) => (

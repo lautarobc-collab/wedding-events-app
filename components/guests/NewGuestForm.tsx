@@ -20,7 +20,7 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
     formState: { errors, isSubmitting },
   } = useForm<GuestFormValues>({
     resolver: zodResolver(guestSchema),
-    defaultValues: { dietary_restrictions: "", companions: [] },
+    defaultValues: { dietary_restrictions: "", group_label: "", companions: [] },
   });
 
   async function onSubmit(values: GuestFormValues) {
@@ -36,6 +36,7 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
       email: "",
       invited_by: "",
       dietary_restrictions: "",
+      group_label: "",
       companions: [],
     });
     router.refresh();
@@ -76,6 +77,14 @@ export function NewGuestForm({ eventId }: { eventId: string }) {
           <label className="text-sm">Invitado por</label>
           <input
             {...register("invited_by")}
+            className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm">Grupo (opcional)</label>
+          <input
+            placeholder="Familia, amigos, trabajo..."
+            {...register("group_label")}
             className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
           />
         </div>

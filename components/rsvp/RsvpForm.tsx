@@ -18,14 +18,22 @@ type Invite = {
   message: string | null;
 };
 
+type Companion = {
+  id: string;
+  is_child: boolean;
+  name: string | null;
+};
+
 export function RsvpForm({
   slug,
   guestId,
   invite,
+  companions,
 }: {
   slug: string;
   guestId: string;
   invite: Invite;
+  companions: Companion[];
 }) {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -43,6 +51,10 @@ export function RsvpForm({
       confirmed_children: invite.confirmed_children ?? 0,
       dietary_notes: invite.dietary_notes ?? "",
       message: invite.message ?? "",
+      companion_names: companions.map((companion) => ({
+        id: companion.id,
+        name: companion.name ?? "",
+      })),
     },
   });
 
@@ -116,6 +128,24 @@ export function RsvpForm({
           {errors.confirmed_children && (
             <p className="text-sm text-red-600 dark:text-red-400">{errors.confirmed_children.message}</p>
           )}
+        </div>
+      )}
+
+      {attending === "si" && companions.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">
+            Nombres de tus acompañantes (opcional)
+          </label>
+          {companions.map((companion, index) => (
+            <div key={companion.id} className="flex items-center gap-2">
+              <input type="hidden" {...register(`companion_names.${index}.id` as const)} />
+              <input
+                placeholder={companion.is_child ? "Nombre (niño)" : "Nombre"}
+                {...register(`companion_names.${index}.name` as const)}
+                className="flex-1 rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
+              />
+            </div>
+          ))}
         </div>
       )}
 

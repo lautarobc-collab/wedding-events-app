@@ -9,6 +9,7 @@ export const budgetItemSchema = z.object({
     .number({ error: "Tiene que ser un número" })
     .nonnegative("No puede ser negativo"),
   vendor_id: z.string().trim().optional(),
+  expense_date: z.string().trim().optional(),
 });
 
 export type BudgetItemFormValues = z.infer<typeof budgetItemSchema>;

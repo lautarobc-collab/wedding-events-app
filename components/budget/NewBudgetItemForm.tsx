@@ -29,7 +29,7 @@ export function NewBudgetItemForm({
     formState: { errors, isSubmitting },
   } = useForm<BudgetItemFormValues>({
     resolver: zodResolver(budgetItemSchema),
-    defaultValues: { estimated: 0, actual: 0, vendor_id: "" },
+    defaultValues: { estimated: 0, actual: 0, vendor_id: "", expense_date: "" },
   });
 
   async function onSubmit(values: BudgetItemFormValues) {
@@ -39,7 +39,7 @@ export function NewBudgetItemForm({
       setServerError(result.error);
       return;
     }
-    reset({ description: "", estimated: 0, actual: 0, vendor_id: "" });
+    reset({ description: "", estimated: 0, actual: 0, vendor_id: "", expense_date: "" });
     router.refresh();
   }
 
@@ -93,6 +93,14 @@ export function NewBudgetItemForm({
           </select>
         </div>
       )}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm">Fecha del gasto (opcional)</label>
+        <input
+          type="date"
+          {...register("expense_date")}
+          className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+        />
+      </div>
       <button
         type="submit"
         disabled={isSubmitting}

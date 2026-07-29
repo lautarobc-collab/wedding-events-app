@@ -55,6 +55,7 @@ export function GuestRow({
       email: guest.email ?? "",
       invited_by: guest.invited_by ?? "",
       dietary_restrictions: guest.dietary_restrictions ?? "",
+      group_label: guest.group_label ?? "",
       companions: guest.guest_companions.map((companion) => ({
         id: companion.id,
         name: companion.name ?? "",
@@ -113,6 +114,11 @@ export function GuestRow({
           <div>
             <p className="font-medium">
               {guest.first_name} {guest.last_name ?? ""}
+              {guest.group_label && (
+                <span className="ml-2 rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-xs font-normal text-neutral-600 dark:text-neutral-400">
+                  {guest.group_label}
+                </span>
+              )}
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">
               {guest.guest_companions.length > 0
@@ -145,6 +151,11 @@ export function GuestRow({
             <input
               placeholder="Invitado por"
               {...register("invited_by")}
+              className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
+            />
+            <input
+              placeholder="Grupo (familia, amigos...)"
+              {...register("group_label")}
               className="rounded border border-neutral-300 dark:border-neutral-700 px-2 py-1"
             />
           </div>
