@@ -16,9 +16,11 @@ const TABS = [
 export function EventNav({
   eventId,
   eventName,
+  overdueTasksCount,
 }: {
   eventId: string;
   eventName: string;
+  overdueTasksCount: number;
 }) {
   const pathname = usePathname();
   const base = `/eventos/${eventId}`;
@@ -47,6 +49,11 @@ export function EventNav({
               }`}
             >
               {tab.label}
+              {tab.href === "/tareas" && overdueTasksCount > 0 && (
+                <span className="ml-1.5 rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-medium text-white dark:bg-red-500">
+                  {overdueTasksCount}
+                </span>
+              )}
             </Link>
           );
         })}
