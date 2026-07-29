@@ -70,6 +70,17 @@ export async function updateEvent(eventId: string, values: EventFormValues) {
   return { success: true };
 }
 
+export async function setSummarySharing(eventId: string, enabled: boolean) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("events")
+    .update({ summary_public_token: enabled ? crypto.randomUUID() : null })
+    .eq("id", eventId);
+  if (error) return { error: error.message };
+  revalidatePath(`/eventos/${eventId}`);
+  return { success: true };
+}
+
 export async function deleteEvent(eventId: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("events").delete().eq("id", eventId);

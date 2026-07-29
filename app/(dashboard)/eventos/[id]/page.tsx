@@ -1,6 +1,7 @@
 import { getEvent } from "@/lib/events";
 import { createClient } from "@/lib/supabase/server";
 import { EventHeaderCard } from "@/components/events/EventHeaderCard";
+import { ShareSummaryToggle } from "@/components/events/ShareSummaryToggle";
 import { SummaryCards } from "@/components/dashboard/SummaryCards";
 import { UpcomingTasks } from "@/components/dashboard/UpcomingTasks";
 import { QuickAddPanel } from "@/components/dashboard/QuickAddPanel";
@@ -95,6 +96,8 @@ export default async function EventSummaryPage({
       />
 
       <UpcomingTasks eventId={event.id} tasks={tasks} />
+
+      <ShareSummaryToggle eventId={event.id} summaryPublicToken={event.summary_public_token} />
 
       <QuickAddPanel
         eventId={event.id}

@@ -14,6 +14,7 @@ export type Event = {
   total_budget: number | null;
   public_slug: string | null;
   created_at: string;
+  summary_public_token: string | null;
 };
 
 export type Category = {
