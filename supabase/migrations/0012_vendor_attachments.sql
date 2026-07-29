@@ -57,7 +57,7 @@ create policy "vendor_attachments_storage_select" on storage.objects
       select 1 from vendors v
       join categories c on c.id = v.category_id
       join events e on e.id = c.event_id
-      where v.id::text = (storage.foldername(name))[1] and e.owner_id = auth.uid()
+      where v.id::text = (storage.foldername(storage.objects.name))[1] and e.owner_id = auth.uid()
     )
   );
 create policy "vendor_attachments_storage_insert" on storage.objects
@@ -67,7 +67,7 @@ create policy "vendor_attachments_storage_insert" on storage.objects
       select 1 from vendors v
       join categories c on c.id = v.category_id
       join events e on e.id = c.event_id
-      where v.id::text = (storage.foldername(name))[1] and e.owner_id = auth.uid()
+      where v.id::text = (storage.foldername(storage.objects.name))[1] and e.owner_id = auth.uid()
     )
   );
 create policy "vendor_attachments_storage_delete" on storage.objects
@@ -77,6 +77,6 @@ create policy "vendor_attachments_storage_delete" on storage.objects
       select 1 from vendors v
       join categories c on c.id = v.category_id
       join events e on e.id = c.event_id
-      where v.id::text = (storage.foldername(name))[1] and e.owner_id = auth.uid()
+      where v.id::text = (storage.foldername(storage.objects.name))[1] and e.owner_id = auth.uid()
     )
   );
