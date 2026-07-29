@@ -11,6 +11,7 @@ export type Event = {
   name: string;
   event_type: EventType;
   event_date: string | null;
+  location: string | null;
   total_budget: number | null;
   public_slug: string | null;
   created_at: string;

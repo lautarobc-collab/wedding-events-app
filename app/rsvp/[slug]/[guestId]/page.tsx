@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { RsvpForm } from "@/components/rsvp/RsvpForm";
 import type { AttendingStatus } from "@/lib/types";
@@ -43,6 +44,9 @@ export default async function RsvpPage({
           Hola {invite.first_name}, confírmanos tu asistencia
           {invite.event_date ? ` para el ${invite.event_date}` : ""}.
         </p>
+        <Link href={`/evento/${slug}`} className="text-sm underline">
+          Ver información del evento
+        </Link>
       </div>
       <RsvpForm slug={slug} guestId={guestId} invite={invite} />
 

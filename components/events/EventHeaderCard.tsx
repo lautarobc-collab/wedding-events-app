@@ -31,6 +31,7 @@ export function EventHeaderCard({ event }: { event: Event }) {
       name: event.name,
       event_type: event.event_type,
       event_date: event.event_date ?? "",
+      location: event.location ?? "",
       total_budget: event.total_budget ?? undefined,
     },
   });
@@ -85,6 +86,10 @@ export function EventHeaderCard({ event }: { event: Event }) {
                 <dd className="font-medium">
                   {event.total_budget != null ? formatMoney(event.total_budget) : "Sin definir"}
                 </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-neutral-500 dark:text-neutral-400">Ubicación</dt>
+                <dd className="font-medium">{event.location ?? "Sin definir"}</dd>
               </div>
             </dl>
           </div>
@@ -147,6 +152,18 @@ export function EventHeaderCard({ event }: { event: Event }) {
               {errors.total_budget && (
                 <p className="text-sm text-red-600 dark:text-red-400">{errors.total_budget.message}</p>
               )}
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label htmlFor="edit-location" className="text-sm font-medium">
+                Ubicación
+              </label>
+              <input
+                id="edit-location"
+                placeholder="Opcional"
+                {...register("location")}
+                className="rounded border border-neutral-300 dark:border-neutral-700 px-3 py-2"
+              />
             </div>
           </div>
 
