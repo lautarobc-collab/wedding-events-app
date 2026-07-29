@@ -4,7 +4,9 @@ import { TaskSummary } from "@/components/tasks/TaskSummary";
 import { TaskTimeline } from "@/components/tasks/TaskTimeline";
 import { NewTaskForm } from "@/components/tasks/NewTaskForm";
 import { ExportCsvButton } from "@/components/ExportCsvButton";
+import { ExportIcsButton } from "@/components/ExportIcsButton";
 import { toCsv } from "@/lib/exportCsv";
+import { buildIcs } from "@/lib/ics";
 import { describeTaskLink } from "@/lib/taskLinks";
 import { TASK_STATUS_LABEL, type BudgetItem, type Category, type Guest, type Task, type Vendor } from "@/lib/types";
 
@@ -74,11 +76,24 @@ export default async function TasksPage({
     },
   ]);
 
+  const icsEvents = [
+    ...(event.event_date
+      ? [{ uid: `event-${event.id}`, date: event.event_date, summary: event.name }]
+      : []),
+    ...tasks
+      .filter((task) => task.due_date && task.status !== "completado")
+      .map((task) => ({ uid: `task-${task.id}`, date: task.due_date as string, summary: task.title })),
+  ];
+  const ics = buildIcs(event.name, icsEvents);
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">Tareas</h1>
 
-      <ExportCsvButton filename="tareas.csv" csv={csv} />
+      <div className="flex flex-wrap gap-2">
+        <ExportCsvButton filename="tareas.csv" csv={csv} />
+        <ExportIcsButton filename="tareas.ics" content={ics} />
+      </div>
 
       <TaskSummary tasks={tasks} />
 
