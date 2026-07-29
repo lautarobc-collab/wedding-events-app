@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+function subscribe(callback: () => void) {
+  const query = window.matchMedia("(prefers-color-scheme: dark)");
+  query.addEventListener("change", callback);
+  return () => query.removeEventListener("change", callback);
+}
+
+function getSnapshot() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 export function useIsDarkMode(): boolean {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(query.matches);
-    const listener = (event: MediaQueryListEvent) => setIsDark(event.matches);
-    query.addEventListener("change", listener);
-    return () => query.removeEventListener("change", listener);
-  }, []);
-
-  return isDark;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
