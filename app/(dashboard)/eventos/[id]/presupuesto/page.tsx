@@ -40,6 +40,7 @@ export default async function BudgetPage({
       <h1 className="text-xl font-semibold">Presupuesto</h1>
       <BudgetView
         eventId={event.id}
+        eventType={event.event_type}
         totalBudget={event.total_budget}
         categories={categories}
         items={items}

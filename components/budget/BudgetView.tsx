@@ -7,10 +7,11 @@ import { CategoryCard } from "./CategoryCard";
 import { NewCategoryForm } from "./NewCategoryForm";
 import { ExportCsvButton } from "@/components/ExportCsvButton";
 import { toCsv } from "@/lib/exportCsv";
-import type { BudgetItem, Category, Event, Vendor } from "@/lib/types";
+import type { BudgetItem, Category, Event, EventType, Vendor } from "@/lib/types";
 
 export function BudgetView({
   eventId,
+  eventType,
   totalBudget,
   categories,
   items,
@@ -18,6 +19,7 @@ export function BudgetView({
   chosenVendors,
 }: {
   eventId: string;
+  eventType: EventType;
   totalBudget: Event["total_budget"];
   categories: Category[];
   items: BudgetItem[];
@@ -94,7 +96,7 @@ export function BudgetView({
         ))}
       </div>
 
-      <NewCategoryForm eventId={eventId} categories={categories} />
+      <NewCategoryForm eventId={eventId} eventType={eventType} categories={categories} />
     </>
   );
 }

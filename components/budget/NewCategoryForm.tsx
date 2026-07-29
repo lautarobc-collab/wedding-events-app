@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCategory } from "@/app/(dashboard)/eventos/[id]/presupuesto/actions";
-import { CANONICAL_BUDGET_CATEGORIES } from "@/lib/budgetCategories";
-import type { Category } from "@/lib/types";
+import { getCanonicalCategories } from "@/lib/budgetCategories";
+import type { Category, EventType } from "@/lib/types";
 
 export function NewCategoryForm({
   eventId,
+  eventType,
   categories,
 }: {
   eventId: string;
+  eventType: EventType;
   categories: Category[];
 }) {
   const router = useRouter();
@@ -20,7 +22,7 @@ export function NewCategoryForm({
   const [error, setError] = useState<string | null>(null);
 
   const existingNames = new Set(categories.map((c) => c.name));
-  const available = CANONICAL_BUDGET_CATEGORIES.filter((name) => !existingNames.has(name));
+  const available = getCanonicalCategories(eventType).filter((name) => !existingNames.has(name));
 
   async function addCategory(name: string) {
     setError(null);
