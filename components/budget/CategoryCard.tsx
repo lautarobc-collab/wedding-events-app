@@ -40,6 +40,7 @@ export function CategoryCard({
   });
 
   const { estimated, actual } = sumBudget(items, chosenVendors);
+  const overBudget = actual > estimated;
 
   async function onSubmit(values: CategoryFormValues) {
     setServerError(null);
@@ -76,6 +77,11 @@ export function CategoryCard({
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Estimado: {formatMoney(estimated)} · Gastado: {formatMoney(actual)}
           </p>
+          {overBudget && (
+            <p className="text-xs text-red-600 dark:text-red-400">
+              Esta categoría superó lo estimado por {formatMoney(actual - estimated)}
+            </p>
+          )}
         </div>
         <ConfirmDeleteButton
           confirmMessage={`¿Eliminar la categoría "${category.name}" y todos sus gastos? Esta acción no se puede deshacer.`}

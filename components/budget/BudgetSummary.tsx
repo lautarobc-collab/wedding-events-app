@@ -35,6 +35,9 @@ export function BudgetSummary({
         <dd className={`font-medium ${remaining < 0 ? "text-red-600 dark:text-red-400" : ""}`}>
           {formatMoney(remaining)}
         </dd>
+        {remaining < 0 && (
+          <p className="mt-1 text-xs text-red-600 dark:text-red-400">Presupuesto superado</p>
+        )}
       </div>
     </dl>
   );
